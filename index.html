@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rental Property Investment Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1F3C;
+    --navy-mid:#12335E;
+    --navy-line:#24446F;
+    --paper:#F5F6F8;
+    --card:#FFFFFF;
+    --beacon:#69BE28;
+    --beacon-dim:#B8E693;
+    --pass:#1F8A5F;
+    --fail:#B3462F;
+    --muted:#64748B;
+    --hairline:#E3E6EB;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  header{
+    background:var(--ink);
+    color:#fff;
+    padding:28px 32px;
+  }
+  .header-inner{
+    max-width:1180px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .mark{
+    width:34px;height:34px;
+    border-radius:50%;
+    border:1.5px solid var(--beacon);
+    position:relative;
+    flex-shrink:0;
+  }
+  .mark::after{
+    content:"";
+    position:absolute;
+    top:50%;left:50%;
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--beacon);
+    transform:translate(-50%,-50%);
+  }
+  .header-text .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--beacon-dim);
+    margin:0 0 2px;
+  }
+  .header-text h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:20px;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  nav.tabs{
+    background:var(--navy-mid);
+    border-bottom:1px solid var(--navy-line);
+  }
+  .tabs-inner{
+    max-width:1180px;
+    margin:0 auto;
+    display:flex;
+    gap:4px;
+    padding:0 32px;
+  }
+  .tab-btn{
+    appearance:none;
+    background:none;
+    border:none;
+    color:#B9C6D6;
+    font-family:var(--font-body);
+    font-size:13.5px;
+    font-weight:500;
+    padding:14px 16px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .tab-btn:hover{color:#fff;}
+  .tab-btn.active{
+    color:#fff;
+    border-bottom-color:var(--beacon);
+  }
+
+  main{
+    max-width:1180px;
+    margin:0 auto;
+    padding:40px 32px 80px;
+  }
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    grid-template-areas:
+      "financing income"
+      "comparison comparison"
+      "outcome breakdown";
+    gap:28px;
+    align-items:start;
+  }
+  .area-financing{grid-area:financing;}
+  .area-income{grid-area:income;}
+  .area-comparison{grid-area:comparison;}
+  .area-outcome{grid-area:outcome;}
+  .area-breakdown{grid-area:breakdown;}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--hairline);
+    border-radius:14px;
+    padding:28px;
+  }
+
+  .card h2{
+    font-family:var(--font-display);
+    font-size:16px;
+    font-weight:600;
+    margin:0 0 4px;
+    color:var(--ink);
+  }
+  .card .card-sub{
+    font-size:13px;
+    color:var(--muted);
+    margin:0 0 22px;
+  }
+
+  .field-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 24px;
+  }
+  .field{display:flex;flex-direction:column;gap:8px;}
+  .field.full{grid-column:1 / -1;}
+  .field label{
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--navy-mid);
+    display:flex;
+    justify-content:flex-start;
+    align-items:baseline;
+    gap:6px;
+  }
+  .field label .hint{
+    font-size:11px;
+    color:var(--muted);
+    font-weight:400;
+  }
+  .input-wrap{
+    position:relative;
+    display:flex;
+    align-items:center;
+  }
+  .input-wrap .prefix,
+  .input-wrap .suffix{
+    position:absolute;
+    font-family:var(--font-mono);
+    font-size:14px;
+    color:var(--muted);
+    pointer-events:none;
+  }
+  .input-wrap .prefix{left:12px;}
+  .input-wrap .suffix{right:12px;}
+  input[type="number"],
+  input[type="text"],
+  input[type="month"]{
+    width:100%;
+    font-family:var(--font-mono);
+    font-size:14px;
+    padding:10px 12px;
+    border:1px solid var(--hairline);
+    border-radius:8px;
+    background:var(--paper);
+    color:var(--ink);
+    transition:border-color .15s ease;
+  }
+  .input-wrap.has-prefix input{padding-left:24px;}
+  .input-wrap.has-suffix input{padding-right:28px;}
+  input[type="number"]:focus,
+  input[type="text"]:focus,
+  input[type="month"]:focus{
+    outline:none;
+    border-color:var(--beacon);
+    background:#fff;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button{
+    -webkit-appearance:none;margin:0;
+  }
+
+  .divider{
+    border:none;
+    border-top:1px solid var(--hairline);
+    margin:24px 0;
+  }
+  .section-label{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 16px;
+  }
+
+  .extras-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    font-size:13px;
+    color:var(--navy-mid);
+    font-weight:500;
+    margin-top:22px;
+    user-select:none;
+  }
+  .extras-toggle svg{
+    width:14px;height:14px;
+    transition:transform .18s ease;
+  }
+  .extras-toggle.open svg{transform:rotate(90deg);}
+  .extras-body{
+    display:none;
+    margin-top:20px;
+  }
+  .extras-body.show{display:block;}
+
+  .signal-card{
+    background:var(--ink);
+    border-radius:14px;
+    padding:30px 28px;
+    color:#fff;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .signal-ring-wrap{
+    width:88px;height:88px;
+    margin:0 auto 18px;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .signal-ring{
+    position:absolute;
+    border-radius:50%;
+    border:1.5px solid var(--beacon);
+    opacity:0;
+  }
+  .signal-ring.r1{width:100%;height:100%;}
+  .signal-ring.r2{width:100%;height:100%;}
+  .pulse .signal-ring{animation:pulse-ring 2.4s ease-out infinite;}
+  .pulse .signal-ring.r2{animation-delay:1.2s;}
+  @keyframes pulse-ring{
+    0%{transform:scale(0.55);opacity:0.9;}
+    100%{transform:scale(1.15);opacity:0;}
+  }
+  .signal-core{
+    width:52px;height:52px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:13px;
+    background:var(--beacon);
+    color:var(--ink);
+    z-index:2;
+    transition:background .2s ease;
+  }
+  .signal-core.fail{background:#8B98A8;}
+  .signal-label{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:#9FB2C9;
+    margin:0 0 6px;
+  }
+  .signal-verdict{
+    font-family:var(--font-display);
+    font-size:20px;
+    font-weight:600;
+    margin:0 0 4px;
+  }
+  .signal-detail{
+    font-size:13px;
+    color:#B9C6D6;
+    margin:0;
+    font-family:var(--font-mono);
+  }
+
+  .metrics-card{margin-top:20px;}
+  .metric-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:14px 0;
+    border-bottom:1px solid var(--hairline);
+  }
+  .metric-row:last-child{border-bottom:none;padding-bottom:0;}
+  .metric-row:first-child{padding-top:0;}
+  .metric-name{
+    font-size:13px;
+    color:var(--navy-mid);
+    font-weight:500;
+  }
+  .metric-name .sub{
+    display:block;
+    font-size:11.5px;
+    color:var(--muted);
+    font-weight:400;
+    margin-top:2px;
+    max-width:220px;
+  }
+  .metric-value{
+    font-family:var(--font-mono);
+    font-size:17px;
+    font-weight:500;
+    white-space:nowrap;
+    padding-left:12px;
+  }
+  .metric-value.positive{color:var(--pass);}
+  .metric-value.negative{color:var(--fail);}
+
+  .breakdown-card{margin-top:0;}
+  .bd-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    padding:8px 0;
+    color:var(--navy-mid);
+  }
+  .bd-row span:last-child{
+    font-family:var(--font-mono);
+    color:var(--ink);
+  }
+  .bd-row.total{
+    border-top:1px solid var(--hairline);
+    margin-top:4px;
+    padding-top:12px;
+    font-weight:600;
+    color:var(--ink);
+  }
+
+  .note{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid var(--hairline);
+  }
+
+  .card-total{
+    margin-top:24px;
+    padding-top:20px;
+    border-top:1px solid var(--hairline);
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:16px;
+  }
+  .card-total .ct-label{
+    font-size:13px;
+    font-weight:500;
+    color:var(--navy-mid);
+  }
+  .card-total .ct-label .sub{
+    display:block;
+    font-size:11px;
+    color:var(--muted);
+    font-weight:400;
+    margin-top:3px;
+  }
+  .card-total .ct-value{
+    font-family:var(--font-mono);
+    font-size:24px;
+    font-weight:600;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  .compare-bars{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+    margin:20px 0 18px;
+  }
+  .compare-item{display:flex;flex-direction:column;gap:8px;}
+  .compare-label{font-size:12.5px;color:var(--navy-mid);font-weight:500;margin:0;}
+  .compare-value{font-family:var(--font-mono);font-size:26px;font-weight:600;color:var(--ink);margin:0;}
+  .compare-bar-track{
+    height:10px;
+    background:var(--paper);
+    border-radius:6px;
+    overflow:hidden;
+    border:1px solid var(--hairline);
+  }
+  .compare-bar-fill{height:100%;border-radius:6px;transition:width .25s ease;width:0%;}
+  .compare-bar-fill.payment{background:var(--ink);}
+  .compare-bar-fill.rent{background:var(--beacon);}
+  .compare-delta{
+    font-size:13px;
+    font-weight:500;
+    padding-top:16px;
+    border-top:1px solid var(--hairline);
+    margin:0;
+  }
+  .compare-delta.positive{color:var(--pass);}
+  .compare-delta.negative{color:var(--fail);}
+
+  .amort-controls{
+    display:flex;
+    align-items:flex-end;
+    gap:24px;
+    flex-wrap:wrap;
+    margin-bottom:24px;
+  }
+  .amort-summary{
+    display:flex;
+    gap:32px;
+    flex-wrap:wrap;
+  }
+  .amort-stat .stat-label{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 4px;
+  }
+  .amort-stat .stat-value{
+    font-family:var(--font-mono);
+    font-size:18px;
+    font-weight:500;
+    color:var(--ink);
+    margin:0;
+  }
+  .table-wrap{
+    max-height:560px;
+    overflow-y:auto;
+    border:1px solid var(--hairline);
+    border-radius:10px;
+  }
+  table.amort-table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+  }
+  table.amort-table thead th{
+    position:sticky;
+    top:0;
+    background:var(--ink);
+    color:#fff;
+    text-align:right;
+    padding:10px 14px;
+    font-weight:500;
+    font-size:11px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    z-index:1;
+  }
+  table.amort-table thead th:first-child,
+  table.amort-table thead th:nth-child(2){text-align:left;}
+  table.amort-table td{
+    text-align:right;
+    padding:8px 14px;
+    border-bottom:1px solid var(--hairline);
+    color:var(--navy-mid);
+    white-space:nowrap;
+  }
+  table.amort-table td:first-child,
+  table.amort-table td:nth-child(2){text-align:left;color:var(--ink);}
+  table.amort-table tbody tr:nth-child(12n+1){background:var(--paper);}
+  table.amort-table tbody tr.year-end td{border-bottom:1.5px solid var(--navy-line);}
+
+  @media (max-width:900px){
+    .grid-2{
+      grid-template-columns:1fr;
+      grid-template-areas:
+        "financing"
+        "income"
+        "comparison"
+        "outcome"
+        "breakdown";
+    }
+    .field-grid{grid-template-columns:1fr;}
+    .compare-bars{grid-template-columns:1fr;}
+    header{padding:22px 20px;}
+    main{padding:28px 20px 60px;}
+    .tabs-inner{padding:0 20px;}
+    .amort-controls{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="mark" aria-hidden="true"></div>
+    <div class="header-text">
+      <p class="eyebrow">See if your investment passes the 1% rule</p>
+      <h1>Rental Property Investment Calculator</h1>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="calculator">Calculator</button>
+    <button class="tab-btn" data-tab="amortization">Amortization schedule</button>
+  </div>
+</nav>
+
+<main>
+
+  <div class="tab-panel active" id="panel-calculator">
+    <div class="grid-2">
+
+        <div class="card area-financing">
+          <h2>Property &amp; financing</h2>
+          <p class="card-sub">The purchase and loan terms for this deal.</p>
+          <div class="field-grid">
+
+            <div class="field">
+              <label for="homePrice">Home price</label>
+              <div class="input-wrap has-prefix">
+                <span class="prefix">$</span>
+                <input type="text" inputmode="decimal" class="fmt-currency" id="homePrice" value="300,000">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="downPct">Percent down <span class="hint" id="downAmtHint"></span></label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="downPct" value="20" step="1" min="0" max="100">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="interestRate">Interest rate</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="interestRate" value="6.75" step="0.05" min="0">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="loanTerm">Loan term</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="loanTerm" value="30" step="1" min="1">
+                <span class="suffix">yrs</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="insuranceMonthly">Estimated insurance</label>
+              <div class="input-wrap has-prefix has-suffix">
+                <span class="prefix">$</span>
+                <input type="text" inputmode="decimal" class="fmt-currency" id="insuranceMonthly" value="100">
+                <span class="suffix">/mo</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="taxRate">Estimated tax rate <span class="hint">annual, of price</span></label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="taxRate" value="3" step="0.1" min="0">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="extraPayment">Extra monthly payment <span class="hint">toward principal</span></label>
+              <div class="input-wrap has-prefix">
+                <span class="prefix">$</span>
+                <input type="text" inputmode="decimal" class="fmt-currency" id="extraPayment" value="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="extras-toggle" id="financeToggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+            More financing assumptions
+          </div>
+          <div class="extras-body" id="financeExtras">
+            <hr class="divider" style="margin-top:0;">
+            <div class="field-grid">
+              <div class="field">
+                <label for="closingPct">Closing costs <span class="hint">of price, one-time</span></label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="closingPct" value="3" step="0.5" min="0">
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="hoaMonthly">HOA / condo fee</label>
+                <div class="input-wrap has-prefix has-suffix">
+                  <span class="prefix">$</span>
+                  <input type="text" inputmode="decimal" class="fmt-currency" id="hoaMonthly" value="0">
+                  <span class="suffix">/mo</span>
+                </div>
+              </div>
+              <div class="field full">
+                <label for="pmiRate">PMI rate <span class="hint">annual, applies only if down payment is under 20%</span></label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="pmiRate" value="0.5" step="0.05" min="0">
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-total">
+            <div class="ct-label">Estimated monthly payment
+              <span class="sub">Principal, interest, taxes, insurance, plus any extra payment</span>
+            </div>
+            <div class="ct-value" id="pitiTotal">—</div>
+          </div>
+        </div>
+
+        <div class="card area-income">
+          <h2>Income &amp; operating assumptions</h2>
+          <p class="card-sub">Rent roll and the costs of keeping units filled and in good shape.</p>
+          <div class="field-grid">
+
+            <div class="field">
+              <label for="units">Number of units</label>
+              <input type="number" id="units" value="2" step="1" min="1">
+            </div>
+
+            <div class="field">
+              <label for="rentPerUnit">Rent per unit</label>
+              <div class="input-wrap has-prefix has-suffix">
+                <span class="prefix">$</span>
+                <input type="text" inputmode="decimal" class="fmt-currency" id="rentPerUnit" value="1,500">
+                <span class="suffix">/mo</span>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="vacancyRate">Estimated vacancy <span class="hint">of gross rent</span></label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="vacancyRate" value="5" step="0.5" min="0">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="capexRate">Estimated capital improvements <span class="hint">of gross rent</span></label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="capexRate" value="5" step="0.5" min="0">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="extras-toggle" id="incomeToggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+            More operating assumptions
+          </div>
+          <div class="extras-body" id="incomeExtras">
+            <hr class="divider" style="margin-top:0;">
+            <div class="field-grid">
+              <div class="field full">
+                <label for="mgmtRate">Property management <span class="hint">of gross rent, 0 if self-managed</span></label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="mgmtRate" value="0" step="0.5" min="0">
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-total">
+            <div class="ct-label">Total monthly rent
+              <span class="sub">All units, before vacancy or expenses</span>
+            </div>
+            <div class="ct-value" id="rentTotal">—</div>
+          </div>
+        </div>
+
+        <div class="card area-comparison">
+          <p class="section-label">Payment vs. rent, side by side</p>
+          <div class="compare-bars">
+            <div class="compare-item">
+              <p class="compare-label">Estimated monthly payment</p>
+              <p class="compare-value" id="cmpPaymentValue">—</p>
+              <div class="compare-bar-track"><div class="compare-bar-fill payment" id="cmpPaymentBar"></div></div>
+            </div>
+            <div class="compare-item">
+              <p class="compare-label">Total monthly rent</p>
+              <p class="compare-value" id="cmpRentValue">—</p>
+              <div class="compare-bar-track"><div class="compare-bar-fill rent" id="cmpRentBar"></div></div>
+            </div>
+          </div>
+          <p class="compare-delta" id="cmpDelta">—</p>
+        </div>
+
+        <div class="area-outcome">
+          <div class="signal-card">
+            <div class="signal-ring-wrap" id="signalPulseWrap">
+              <div class="signal-ring r1"></div>
+              <div class="signal-ring r2"></div>
+              <div class="signal-core" id="signalCore">1%</div>
+            </div>
+            <p class="signal-label">The 1% rule</p>
+            <p class="signal-verdict" id="signalVerdict">—</p>
+            <p class="signal-detail" id="signalDetail">—</p>
+          </div>
+
+          <div class="card metrics-card">
+            <div class="metric-row">
+              <div class="metric-name">Cap rate
+                <span class="sub">Net operating income ÷ home price. Financing-independent.</span>
+              </div>
+              <div class="metric-value" id="capRateValue">—</div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-name">Cash-on-cash return
+                <span class="sub">Annual cash flow after your mortgage payment ÷ cash invested.</span>
+              </div>
+              <div class="metric-value" id="cocValue">—</div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-name">Monthly cash flow
+                <span class="sub">What's left after every expense and the mortgage.</span>
+              </div>
+              <div class="metric-value" id="cashFlowValue">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card breakdown-card area-breakdown">
+          <p class="section-label">Monthly operating breakdown</p>
+          <div class="bd-row"><span>Gross rent</span><span id="bdRent">—</span></div>
+          <div class="bd-row"><span>Vacancy loss</span><span id="bdVacancy">—</span></div>
+          <div class="bd-row"><span>Capital improvements</span><span id="bdCapex">—</span></div>
+          <div class="bd-row"><span>Property management</span><span id="bdMgmt">—</span></div>
+          <div class="bd-row"><span>Property tax</span><span id="bdTax">—</span></div>
+          <div class="bd-row"><span>Insurance</span><span id="bdInsurance">—</span></div>
+          <div class="bd-row"><span>HOA</span><span id="bdHoa">—</span></div>
+          <div class="bd-row"><span>Principal &amp; interest</span><span id="bdPI">—</span></div>
+          <div class="bd-row"><span>PMI</span><span id="bdPmi">—</span></div>
+          <div class="bd-row"><span>Extra payment</span><span id="bdExtra">—</span></div>
+          <div class="bd-row total"><span>Net cash flow</span><span id="bdNet">—</span></div>
+          <p class="note">Cap rate follows the standard definition: net operating income (rent, minus vacancy, capital improvements, management, tax, insurance, and HOA) over the home price, with no mortgage in the equation. Cash-on-cash return is your actual return on the money you put in — it subtracts your mortgage payment, any extra payment, and PMI, then divides by your down payment plus closing costs. Both are estimates for planning purposes, not a substitute for a professional underwriting review.</p>
+        </div>
+
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-amortization">
+    <div class="card">
+      <h2>Amortization schedule</h2>
+      <p class="card-sub">Month-by-month breakdown of your loan payoff, using the financing terms from the Calculator tab.</p>
+
+      <div class="amort-controls">
+        <div class="field" style="max-width:220px;">
+          <label for="startMonth">Loan start month</label>
+          <input type="month" id="startMonth">
+        </div>
+        <div class="amort-summary">
+          <div class="amort-stat">
+            <p class="stat-label">Payoff date</p>
+            <p class="stat-value" id="payoffDate">—</p>
+          </div>
+          <div class="amort-stat">
+            <p class="stat-label">Total interest paid</p>
+            <p class="stat-value" id="totalInterest">—</p>
+          </div>
+          <div class="amort-stat">
+            <p class="stat-label">Total P&amp;I paid</p>
+            <p class="stat-value" id="totalPaid">—</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="card-sub" style="margin-top:-8px;">Total P&amp;I paid is your loan amount plus every dollar of interest paid over the life of the loan (principal + interest only) — it isn't the number of payments, and it excludes the down payment, taxes, insurance, HOA, and PMI, so it won't match the home price.</p>
+
+      <div class="table-wrap">
+        <table class="amort-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Payment</th>
+              <th>Interest</th>
+              <th>Principal</th>
+              <th>Extra</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody id="amortBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+(function(){
+  const ids = ['homePrice','downPct','interestRate','loanTerm','insuranceMonthly','taxRate','extraPayment',
+    'closingPct','hoaMonthly','pmiRate','units','rentPerUnit','vacancyRate','capexRate','mgmtRate'];
+  const el = {};
+  ids.forEach(id => el[id] = document.getElementById(id));
+
+  const $ = id => document.getElementById(id);
+  const setText = (id, text) => { $(id).textContent = text; };
+
+  const fmtUSD = n => n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  const fmtUSD2 = n => n.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmtPct = n => (Math.round(n*10)/10).toFixed(1) + '%';
+  const fmtParen = n => '(' + fmtUSD(n) + ')';
+
+  function num(id){
+    const raw = (el[id].value || '').toString().replace(/,/g, '');
+    const v = parseFloat(raw);
+    return isNaN(v) ? 0 : v;
+  }
+
+  // All financing, income, and outcome math lives here. Everything downstream
+  // (totals, the comparison bar, the signal, the breakdown) just reads this object.
+  function calculate(){
+    const homePrice = Math.max(num('homePrice'), 0);
+    const downPct = Math.min(Math.max(num('downPct'), 0), 100) / 100;
+    const downAmt = homePrice * downPct;
+    const loanAmt = Math.max(homePrice - downAmt, 0);
+    const annualRate = num('interestRate') / 100;
+    const termYears = Math.max(num('loanTerm'), 1);
+    const n = termYears * 12;
+    const r = annualRate / 12;
+
+    let pAndI = (r === 0) ? loanAmt / n : loanAmt * r / (1 - Math.pow(1 + r, -n));
+    if (!isFinite(pAndI)) pAndI = 0;
+
+    const insuranceMonthly = Math.max(num('insuranceMonthly'), 0);
+    const taxRate = Math.max(num('taxRate'), 0) / 100;
+    const taxMonthly = homePrice * taxRate / 12;
+    const extraPayment = Math.max(num('extraPayment'), 0);
+    const closingCosts = homePrice * (Math.max(num('closingPct'), 0) / 100);
+    const hoaMonthly = Math.max(num('hoaMonthly'), 0);
+    const pmiRate = Math.max(num('pmiRate'), 0) / 100;
+    const pmiMonthly = downPct < 0.20 ? (loanAmt * pmiRate / 12) : 0;
+
+    const units = Math.max(num('units'), 0);
+    const rentPerUnit = Math.max(num('rentPerUnit'), 0);
+    const grossRent = units * rentPerUnit;
+    const vacancyLoss = grossRent * (Math.max(num('vacancyRate'), 0) / 100);
+    const capexReserve = grossRent * (Math.max(num('capexRate'), 0) / 100);
+    const mgmtFee = grossRent * (Math.max(num('mgmtRate'), 0) / 100);
+
+    // Cap rate: net operating income only, no mortgage. Financing-independent.
+    const operatingExpenses = vacancyLoss + capexReserve + mgmtFee + taxMonthly + insuranceMonthly + hoaMonthly;
+    const noiMonthly = grossRent - operatingExpenses;
+    const capRate = homePrice > 0 ? (noiMonthly * 12 / homePrice) * 100 : 0;
+
+    // Cash-on-cash: what's actually left after the mortgage, extra payment, and PMI,
+    // measured against the cash you put in (down payment + closing costs).
+    const debtServiceMonthly = pAndI + extraPayment + pmiMonthly;
+    const cashFlowMonthly = noiMonthly - debtServiceMonthly;
+    const totalCashInvested = downAmt + closingCosts;
+    const coc = totalCashInvested > 0 ? (cashFlowMonthly * 12 / totalCashInvested) * 100 : 0;
+
+    // The 1% rule: gross rent vs. 1% of the home price.
+    const onePercentThreshold = homePrice * 0.01;
+    const onePercentRatio = homePrice > 0 ? (grossRent / homePrice) * 100 : 0;
+    const passes = grossRent >= onePercentThreshold;
+
+    // Estimated monthly payment: principal, interest, taxes, insurance, plus any extra payment.
+    const pitiMonthly = pAndI + taxMonthly + insuranceMonthly + extraPayment;
+
+    return {
+      homePrice, downAmt, loanAmt, r, n, pAndI, insuranceMonthly, taxMonthly, extraPayment,
+      hoaMonthly, pmiMonthly, grossRent, vacancyLoss, capexReserve, mgmtFee,
+      noiMonthly, capRate, cashFlowMonthly, coc, onePercentThreshold, onePercentRatio, passes, pitiMonthly
+    };
+  }
+
+  function renderTotals(c){
+    setText('downAmtHint', fmtUSD(c.downAmt));
+    setText('pitiTotal', fmtUSD(c.pitiMonthly));
+    setText('rentTotal', fmtUSD(c.grossRent));
+  }
+
+  function renderComparison(c){
+    const maxCompare = Math.max(c.pitiMonthly, c.grossRent, 1);
+    setText('cmpPaymentValue', fmtUSD(c.pitiMonthly));
+    setText('cmpRentValue', fmtUSD(c.grossRent));
+    $('cmpPaymentBar').style.width = (c.pitiMonthly / maxCompare * 100) + '%';
+    $('cmpRentBar').style.width = (c.grossRent / maxCompare * 100) + '%';
+
+    const cmpDelta = $('cmpDelta');
+    const deltaAmt = c.grossRent - c.pitiMonthly;
+    const surplus = deltaAmt >= 0;
+    cmpDelta.textContent = surplus
+      ? 'Rent exceeds your estimated monthly payment by ' + fmtUSD(deltaAmt) + ' a month.'
+      : 'Your estimated monthly payment exceeds rent by ' + fmtUSD(Math.abs(deltaAmt)) + ' a month.';
+    cmpDelta.classList.toggle('positive', surplus);
+    cmpDelta.classList.toggle('negative', !surplus);
+  }
+
+  function renderSignal(c){
+    const core = $('signalCore');
+    const wrap = $('signalPulseWrap');
+    $('signalVerdict').textContent = c.passes ? 'Passes' : 'Falls short';
+    core.classList.toggle('fail', !c.passes);
+    wrap.classList.toggle('pulse', c.passes);
+    setText('signalDetail', fmtUSD(c.grossRent) + ' rent vs. ' + fmtUSD(c.onePercentThreshold) + ' threshold (' + fmtPct(c.onePercentRatio) + ' of price)');
+    core.textContent = fmtPct(c.onePercentRatio);
+  }
+
+  function renderMetrics(c){
+    const capRateEl = $('capRateValue');
+    capRateEl.textContent = fmtPct(c.capRate);
+    capRateEl.classList.toggle('positive', c.capRate >= 0);
+    capRateEl.classList.toggle('negative', c.capRate < 0);
+
+    const cocEl = $('cocValue');
+    cocEl.textContent = fmtPct(c.coc);
+    cocEl.classList.toggle('positive', c.coc >= 0);
+    cocEl.classList.toggle('negative', c.coc < 0);
+
+    const cfEl = $('cashFlowValue');
+    cfEl.textContent = fmtUSD(c.cashFlowMonthly);
+    cfEl.classList.toggle('positive', c.cashFlowMonthly >= 0);
+    cfEl.classList.toggle('negative', c.cashFlowMonthly < 0);
+  }
+
+  function renderBreakdown(c){
+    setText('bdRent', fmtUSD(c.grossRent));
+    setText('bdVacancy', fmtParen(c.vacancyLoss));
+    setText('bdCapex', fmtParen(c.capexReserve));
+    setText('bdMgmt', fmtParen(c.mgmtFee));
+    setText('bdTax', fmtParen(c.taxMonthly));
+    setText('bdInsurance', fmtParen(c.insuranceMonthly));
+    setText('bdHoa', fmtParen(c.hoaMonthly));
+    setText('bdPI', fmtParen(c.pAndI));
+    setText('bdPmi', fmtParen(c.pmiMonthly));
+    setText('bdExtra', fmtParen(c.extraPayment));
+    setText('bdNet', fmtUSD(c.cashFlowMonthly));
+  }
+
+  function render(){
+    const c = calculate();
+    renderTotals(c);
+    renderComparison(c);
+    renderSignal(c);
+    renderMetrics(c);
+    renderBreakdown(c);
+    renderAmortization(c);
+  }
+
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function getAmortStartDate(){
+    const startVal = $('startMonth').value;
+    if (startVal) {
+      const [y, m] = startVal.split('-');
+      return { year: parseInt(y, 10), monthIdx: parseInt(m, 10) - 1 };
+    }
+    const now = new Date();
+    return { year: now.getFullYear(), monthIdx: now.getMonth() };
+  }
+
+  // Runs the same loan forward month by month. The extra payment (if any) goes
+  // straight to principal, so a higher extra payment shortens the schedule and
+  // lowers total interest automatically.
+  function buildAmortizationRows(c, start){
+    const rows = [];
+    let balance = c.loanAmt;
+    const maxMonths = Math.round(c.n) + 2;
+
+    for (let i = 1; i <= maxMonths && balance > 0.005; i++) {
+      const interest = balance * c.r;
+      let scheduledPrincipal = Math.max(c.pAndI - interest, 0);
+      let extra = c.extraPayment;
+      let totalPrincipal = scheduledPrincipal + extra;
+      let paymentAmount = c.pAndI + extra;
+
+      if (totalPrincipal >= balance) {
+        totalPrincipal = balance;
+        scheduledPrincipal = Math.min(scheduledPrincipal, totalPrincipal);
+        extra = totalPrincipal - scheduledPrincipal;
+        paymentAmount = interest + totalPrincipal;
+      }
+
+      balance -= totalPrincipal;
+
+      const dateIdx = start.monthIdx + (i - 1);
+      const year = start.year + Math.floor(dateIdx / 12);
+      const monthLabel = monthNames[((dateIdx % 12) + 12) % 12];
+
+      rows.push({
+        i, label: monthLabel + ' ' + year, payment: paymentAmount,
+        interest, principal: scheduledPrincipal, extra, balance, isYearEnd: (i % 12 === 0)
+      });
+    }
+    return rows;
+  }
+
+  function renderAmortization(c){
+    const rows = buildAmortizationRows(c, getAmortStartDate());
+
+    const frag = document.createDocumentFragment();
+    rows.forEach(row => {
+      const tr = document.createElement('tr');
+      if (row.isYearEnd) tr.className = 'year-end';
+      tr.innerHTML = '<td>' + row.i + '</td>' +
+        '<td>' + row.label + '</td>' +
+        '<td>' + fmtUSD2(row.payment) + '</td>' +
+        '<td>' + fmtUSD2(row.interest) + '</td>' +
+        '<td>' + fmtUSD2(row.principal) + '</td>' +
+        '<td>' + fmtUSD2(row.extra) + '</td>' +
+        '<td>' + fmtUSD2(Math.max(row.balance, 0)) + '</td>';
+      frag.appendChild(tr);
+    });
+
+    const body = $('amortBody');
+    body.innerHTML = '';
+    body.appendChild(frag);
+
+    const totalInterest = rows.reduce((sum, row) => sum + row.interest, 0);
+    const totalPI = rows.reduce((sum, row) => sum + row.payment, 0);
+    const lastRow = rows[rows.length - 1];
+    setText('payoffDate', lastRow ? lastRow.label : '—');
+    setText('totalInterest', fmtUSD(totalInterest));
+    setText('totalPaid', fmtUSD(totalPI));
+  }
+
+  // Recalculate on every input change.
+  ids.forEach(id => el[id].addEventListener('input', render));
+  $('startMonth').addEventListener('input', render);
+
+  // Currency fields show comma-formatted values at rest, and plain digits while
+  // being edited so typing isn't fighting the formatter.
+  const currencyIds = ['homePrice','insuranceMonthly','extraPayment','hoaMonthly','rentPerUnit'];
+  function formatCommas(id){
+    const raw = el[id].value.toString().replace(/,/g, '');
+    if (raw === '' || isNaN(raw)) return;
+    el[id].value = Number(raw).toLocaleString('en-US');
+  }
+  currencyIds.forEach(id => {
+    el[id].addEventListener('focus', () => { el[id].value = el[id].value.replace(/,/g, ''); });
+    el[id].addEventListener('blur', () => formatCommas(id));
+    formatCommas(id);
+  });
+
+  function wireToggle(toggleId, bodyId){
+    const t = $(toggleId), b = $(bodyId);
+    t.addEventListener('click', () => {
+      t.classList.toggle('open');
+      b.classList.toggle('show');
+    });
+  }
+  wireToggle('financeToggle', 'financeExtras');
+  wireToggle('incomeToggle', 'incomeExtras');
+
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      $('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  const today = new Date();
+  $('startMonth').value = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+
+  render();
+})();
+</script>
+
+</body>
+</html>
