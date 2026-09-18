@@ -1,1106 +1,768 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rental Property Investment Calculator</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The O'Brien Family Timeline</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#0A1F3C;
-    --navy-mid:#12335E;
-    --navy-line:#24446F;
-    --paper:#F5F6F8;
-    --card:#FFFFFF;
-    --beacon:#69BE28;
-    --beacon-dim:#B8E693;
-    --pass:#1F8A5F;
-    --fail:#B3462F;
-    --muted:#64748B;
-    --hairline:#E3E6EB;
-    --font-display:'Space Grotesk', sans-serif;
-    --font-body:'Inter', sans-serif;
-    --font-mono:'IBM Plex Mono', monospace;
+:root{
+  --bg:#141a24;
+  --bg-deep:#0f141c;
+  --panel:#1d2634;
+  --panel-line:#2f3b4d;
+  --ink:#f2e9dc;
+  --ink-soft:#a9b3c2;
+  --card:#f6efe3;
+  --card-ink:#232830;
+  --card-ink-soft:#6a7180;
+  --accent:#e8a33d;
+  --accent-ink:#2a1c05;
+  --right:#4f9e73;
+  --wrong:#cf6a5c;
+  --slot-empty:rgba(255,255,255,.04);
+  --shadow:0 10px 24px rgba(0,0,0,.35);
+  --radius:10px;
+}
+:root[data-theme="light"]{
+  --bg:#e9e0d1;
+  --bg-deep:#ded3c0;
+  --panel:#f3ece0;
+  --panel-line:#cfc2ac;
+  --ink:#232830;
+  --ink-soft:#6a6254;
+  --card:#ffffff;
+  --card-ink:#232830;
+  --card-ink-soft:#6a7180;
+  --accent:#b0700f;
+  --accent-ink:#fff8ec;
+  --right:#3d7f5c;
+  --wrong:#b4503f;
+  --slot-empty:rgba(0,0,0,.035);
+  --shadow:0 8px 20px rgba(60,45,20,.18);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#e9e0d1;
+    --bg-deep:#ded3c0;
+    --panel:#f3ece0;
+    --panel-line:#cfc2ac;
+    --ink:#232830;
+    --ink-soft:#6a6254;
+    --card:#ffffff;
+    --card-ink:#232830;
+    --card-ink-soft:#6a7180;
+    --accent:#b0700f;
+    --accent-ink:#fff8ec;
+    --right:#3d7f5c;
+    --wrong:#b4503f;
+    --slot-empty:rgba(0,0,0,.035);
+    --shadow:0 8px 20px rgba(60,45,20,.18);
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--font-body);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
-  a{color:inherit;}
+}
 
-  header{
-    background:var(--ink);
-    color:#fff;
-    padding:28px 32px;
-  }
-  .header-inner{
-    max-width:1180px;
-    margin:0 auto;
-    display:flex;
-    align-items:center;
-    gap:14px;
-  }
-  .mark{
-    width:34px;height:34px;
-    border-radius:50%;
-    border:1.5px solid var(--beacon);
-    position:relative;
-    flex-shrink:0;
-  }
-  .mark::after{
-    content:"";
-    position:absolute;
-    top:50%;left:50%;
-    width:8px;height:8px;
-    border-radius:50%;
-    background:var(--beacon);
-    transform:translate(-50%,-50%);
-  }
-  .header-text .eyebrow{
-    font-family:var(--font-mono);
-    font-size:11px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--beacon-dim);
-    margin:0 0 2px;
-  }
-  .header-text h1{
-    font-family:var(--font-display);
-    font-weight:600;
-    font-size:20px;
-    margin:0;
-    letter-spacing:-0.01em;
-  }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Work Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:16px;
+  line-height:1.45;
+  -webkit-text-size-adjust:100%;
+  overscroll-behavior-y:contain;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 16px 140px}
 
-  nav.tabs{
-    background:var(--navy-mid);
-    border-bottom:1px solid var(--navy-line);
-  }
-  .tabs-inner{
-    max-width:1180px;
-    margin:0 auto;
-    display:flex;
-    gap:4px;
-    padding:0 32px;
-  }
-  .tab-btn{
-    appearance:none;
-    background:none;
-    border:none;
-    color:#B9C6D6;
-    font-family:var(--font-body);
-    font-size:13.5px;
-    font-weight:500;
-    padding:14px 16px;
-    cursor:pointer;
-    border-bottom:2px solid transparent;
-    transition:color .15s ease, border-color .15s ease;
-  }
-  .tab-btn:hover{color:#fff;}
-  .tab-btn.active{
-    color:#fff;
-    border-bottom-color:var(--beacon);
-  }
+/* ---------- header ---------- */
+header{margin-bottom:18px}
+.title{
+  font-family:"Fraunces",Georgia,"Times New Roman",serif;
+  font-weight:600;
+  font-size:clamp(30px,5.4vw,46px);
+  line-height:1.03;
+  letter-spacing:-.015em;
+  margin:0 0 6px;
+}
+.title em{font-style:italic;color:var(--accent)}
+.blurb{margin:0;color:var(--ink-soft);max-width:60ch;font-size:15px}
 
-  main{
-    max-width:1180px;
-    margin:0 auto;
-    padding:40px 32px 80px;
-  }
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
+/* ---------- controls ---------- */
+.controls{
+  display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;
+  margin:16px 0 6px;padding:12px 14px;
+  background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);
+}
+.ctl-group{display:flex;align-items:center;gap:8px}
+.ctl-label{font-size:13px;color:var(--ink-soft)}
+.seg{display:flex;border:1px solid var(--panel-line);border-radius:8px;overflow:hidden}
+.seg button{
+  font:inherit;font-size:14px;padding:6px 12px;border:0;cursor:pointer;
+  background:transparent;color:var(--ink);
+}
+.seg button + button{border-left:1px solid var(--panel-line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.spacer{flex:1 1 auto}
 
-  .grid-2{
-    display:grid;
-    grid-template-columns:1.15fr 0.85fr;
-    grid-template-areas:
-      "financing income"
-      "comparison comparison"
-      "outcome breakdown";
-    gap:28px;
-    align-items:start;
-  }
-  .area-financing{grid-area:financing;}
-  .area-income{grid-area:income;}
-  .area-comparison{grid-area:comparison;}
-  .area-outcome{grid-area:outcome;}
-  .area-breakdown{grid-area:breakdown;}
+button.act{
+  font:inherit;font-size:14px;font-weight:600;cursor:pointer;
+  padding:8px 16px;border-radius:8px;
+  border:1px solid var(--panel-line);background:transparent;color:var(--ink);
+}
+button.act.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+button.act:disabled{opacity:.42;cursor:default}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
-  .card{
-    background:var(--card);
-    border:1px solid var(--hairline);
-    border-radius:14px;
-    padding:28px;
-  }
+/* ---------- board ---------- */
+.board{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:860px){.board{grid-template-columns:1fr}}
 
-  .card h2{
-    font-family:var(--font-display);
-    font-size:16px;
-    font-weight:600;
-    margin:0 0 4px;
-    color:var(--ink);
-  }
-  .card .card-sub{
-    font-size:13px;
-    color:var(--muted);
-    margin:0 0 22px;
-  }
+.col{
+  background:var(--panel);border:1px solid var(--panel-line);
+  border-radius:var(--radius);padding:12px;min-width:0;
+}
+.col-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding:0 2px 10px;border-bottom:1px solid var(--panel-line);margin-bottom:10px;
+}
+.col-head h2{
+  font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:0;letter-spacing:-.01em;
+}
+.col-head .meta{font-size:13px;color:var(--ink-soft)}
 
-  .field-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px 24px;
-  }
-  .field{display:flex;flex-direction:column;gap:8px;}
-  .field.full{grid-column:1 / -1;}
-  .field label{
-    font-size:12.5px;
-    font-weight:500;
-    color:var(--navy-mid);
-    display:flex;
-    justify-content:flex-start;
-    align-items:baseline;
-    gap:6px;
-  }
-  .field label .hint{
-    font-size:11px;
-    color:var(--muted);
-    font-weight:400;
-  }
-  .input-wrap{
-    position:relative;
-    display:flex;
-    align-items:center;
-  }
-  .input-wrap .prefix,
-  .input-wrap .suffix{
-    position:absolute;
-    font-family:var(--font-mono);
-    font-size:14px;
-    color:var(--muted);
-    pointer-events:none;
-  }
-  .input-wrap .prefix{left:12px;}
-  .input-wrap .suffix{right:12px;}
-  input[type="number"],
-  input[type="text"],
-  input[type="month"]{
-    width:100%;
-    font-family:var(--font-mono);
-    font-size:14px;
-    padding:10px 12px;
-    border:1px solid var(--hairline);
-    border-radius:8px;
-    background:var(--paper);
-    color:var(--ink);
-    transition:border-color .15s ease;
-  }
-  .input-wrap.has-prefix input{padding-left:24px;}
-  .input-wrap.has-suffix input{padding-right:28px;}
-  input[type="number"]:focus,
-  input[type="text"]:focus,
-  input[type="month"]:focus{
-    outline:none;
-    border-color:var(--beacon);
-    background:#fff;
-  }
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button{
-    -webkit-appearance:none;margin:0;
-  }
+.pile{display:flex;flex-direction:column;gap:8px;min-height:90px}
+.pile.drop-hot{outline:2px dashed var(--accent);outline-offset:6px;border-radius:8px}
+.pile-empty{
+  color:var(--ink-soft);font-size:14px;text-align:center;padding:26px 10px;
+  border:1px dashed var(--panel-line);border-radius:8px;
+}
 
-  .divider{
-    border:none;
-    border-top:1px solid var(--hairline);
-    margin:24px 0;
-  }
-  .section-label{
-    font-family:var(--font-mono);
-    font-size:11px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin:0 0 16px;
-  }
+.slots{display:flex;flex-direction:column;gap:8px;counter-reset:slot}
+.slot{
+  display:grid;grid-template-columns:34px 1fr;align-items:stretch;gap:8px;
+  border-radius:8px;
+}
+.slot .num{
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Fraunces",Georgia,serif;font-size:15px;color:var(--ink-soft);
+  border-right:1px solid var(--panel-line);
+}
+.slot.drop-hot .num{color:var(--accent)}
+.slot .well{
+  min-height:48px;border-radius:8px;border:1px dashed var(--panel-line);
+  background:var(--slot-empty);display:flex;align-items:center;padding:0;
+}
+.slot .well.filled{border:0;background:transparent;padding:0}
+.slot.drop-hot .well{border-color:var(--accent);background:rgba(232,163,61,.13)}
 
-  .extras-toggle{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    font-size:13px;
-    color:var(--navy-mid);
-    font-weight:500;
-    margin-top:22px;
-    user-select:none;
-  }
-  .extras-toggle svg{
-    width:14px;height:14px;
-    transition:transform .18s ease;
-  }
-  .extras-toggle.open svg{transform:rotate(90deg);}
-  .extras-body{
-    display:none;
-    margin-top:20px;
-  }
-  .extras-body.show{display:block;}
+/* ---------- cards ---------- */
+.card{
+  width:100%;display:flex;align-items:center;gap:10px;
+  background:var(--card);color:var(--card-ink);
+  border-radius:8px;border:0;border-left:4px solid var(--card);
+  box-shadow:var(--shadow);
+  padding:11px 12px;font:inherit;font-size:15px;text-align:left;line-height:1.3;
+  cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+}
+.card:active{cursor:grabbing}
+.card .txt{flex:1 1 auto;min-width:0}
+.card .mark{
+  flex:0 0 auto;font-size:13px;font-weight:600;color:var(--card-ink-soft);
+  display:flex;align-items:center;gap:4px;
+}
+.card.selected{outline:3px solid var(--accent);outline-offset:2px}
+.card.dragging{opacity:.28}
+.card.right{border-left-color:var(--right)}
+.card.right .mark{color:var(--right)}
+.card.wrong{border-left-color:var(--wrong)}
+.card.wrong .mark{color:var(--wrong)}
+.card.locked{cursor:default}
 
-  .signal-card{
-    background:var(--ink);
-    border-radius:14px;
-    padding:30px 28px;
-    color:#fff;
-    text-align:center;
-    position:relative;
-    overflow:hidden;
-  }
-  .signal-ring-wrap{
-    width:88px;height:88px;
-    margin:0 auto 18px;
-    position:relative;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .signal-ring{
-    position:absolute;
-    border-radius:50%;
-    border:1.5px solid var(--beacon);
-    opacity:0;
-  }
-  .signal-ring.r1{width:100%;height:100%;}
-  .signal-ring.r2{width:100%;height:100%;}
-  .pulse .signal-ring{animation:pulse-ring 2.4s ease-out infinite;}
-  .pulse .signal-ring.r2{animation-delay:1.2s;}
-  @keyframes pulse-ring{
-    0%{transform:scale(0.55);opacity:0.9;}
-    100%{transform:scale(1.15);opacity:0;}
-  }
-  .signal-core{
-    width:52px;height:52px;
-    border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-family:var(--font-display);
-    font-weight:600;
-    font-size:13px;
-    background:var(--beacon);
-    color:var(--ink);
-    z-index:2;
-    transition:background .2s ease;
-  }
-  .signal-core.fail{background:#8B98A8;}
-  .signal-label{
-    font-family:var(--font-mono);
-    font-size:11px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:#9FB2C9;
-    margin:0 0 6px;
-  }
-  .signal-verdict{
-    font-family:var(--font-display);
-    font-size:20px;
-    font-weight:600;
-    margin:0 0 4px;
-  }
-  .signal-detail{
-    font-size:13px;
-    color:#B9C6D6;
-    margin:0;
-    font-family:var(--font-mono);
-  }
+#ghost{
+  position:fixed;left:0;top:0;z-index:99;pointer-events:none;
+  box-shadow:0 18px 34px rgba(0,0,0,.45);transform:rotate(-1.2deg);
+  opacity:.97;
+}
 
-  .metrics-card{margin-top:20px;}
-  .metric-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    padding:14px 0;
-    border-bottom:1px solid var(--hairline);
-  }
-  .metric-row:last-child{border-bottom:none;padding-bottom:0;}
-  .metric-row:first-child{padding-top:0;}
-  .metric-name{
-    font-size:13px;
-    color:var(--navy-mid);
-    font-weight:500;
-  }
-  .metric-name .sub{
-    display:block;
-    font-size:11.5px;
-    color:var(--muted);
-    font-weight:400;
-    margin-top:2px;
-    max-width:220px;
-  }
-  .metric-value{
-    font-family:var(--font-mono);
-    font-size:17px;
-    font-weight:500;
-    white-space:nowrap;
-    padding-left:12px;
-  }
-  .metric-value.positive{color:var(--pass);}
-  .metric-value.negative{color:var(--fail);}
+/* ---------- result bar ---------- */
+.bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:var(--bg-deep);border-top:1px solid var(--panel-line);
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+}
+.bar-inner{
+  max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+}
+.status{font-size:15px;min-width:0;flex:1 1 220px}
+.status strong{font-family:"Fraunces",Georgia,serif;font-size:17px}
+.status .good{color:var(--right)}
+.status .bad{color:var(--wrong)}
 
-  .breakdown-card{margin-top:0;}
-  .bd-row{
-    display:flex;
-    justify-content:space-between;
-    font-size:13px;
-    padding:8px 0;
-    color:var(--navy-mid);
-  }
-  .bd-row span:last-child{
-    font-family:var(--font-mono);
-    color:var(--ink);
-  }
-  .bd-row.total{
-    border-top:1px solid var(--hairline);
-    margin-top:4px;
-    padding-top:12px;
-    font-weight:600;
-    color:var(--ink);
-  }
-
-  .note{
-    font-size:12px;
-    color:var(--muted);
-    line-height:1.6;
-    margin-top:18px;
-    padding-top:16px;
-    border-top:1px solid var(--hairline);
-  }
-
-  .card-total{
-    margin-top:24px;
-    padding-top:20px;
-    border-top:1px solid var(--hairline);
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:16px;
-  }
-  .card-total .ct-label{
-    font-size:13px;
-    font-weight:500;
-    color:var(--navy-mid);
-  }
-  .card-total .ct-label .sub{
-    display:block;
-    font-size:11px;
-    color:var(--muted);
-    font-weight:400;
-    margin-top:3px;
-  }
-  .card-total .ct-value{
-    font-family:var(--font-mono);
-    font-size:24px;
-    font-weight:600;
-    color:var(--ink);
-    white-space:nowrap;
-  }
-
-  .compare-bars{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:32px;
-    margin:20px 0 18px;
-  }
-  .compare-item{display:flex;flex-direction:column;gap:8px;}
-  .compare-label{font-size:12.5px;color:var(--navy-mid);font-weight:500;margin:0;}
-  .compare-value{font-family:var(--font-mono);font-size:26px;font-weight:600;color:var(--ink);margin:0;}
-  .compare-bar-track{
-    height:10px;
-    background:var(--paper);
-    border-radius:6px;
-    overflow:hidden;
-    border:1px solid var(--hairline);
-  }
-  .compare-bar-fill{height:100%;border-radius:6px;transition:width .25s ease;width:0%;}
-  .compare-bar-fill.payment{background:var(--ink);}
-  .compare-bar-fill.rent{background:var(--beacon);}
-  .compare-delta{
-    font-size:13px;
-    font-weight:500;
-    padding-top:16px;
-    border-top:1px solid var(--hairline);
-    margin:0;
-  }
-  .compare-delta.positive{color:var(--pass);}
-  .compare-delta.negative{color:var(--fail);}
-
-  .amort-controls{
-    display:flex;
-    align-items:flex-end;
-    gap:24px;
-    flex-wrap:wrap;
-    margin-bottom:24px;
-  }
-  .amort-summary{
-    display:flex;
-    gap:32px;
-    flex-wrap:wrap;
-  }
-  .amort-stat .stat-label{
-    font-family:var(--font-mono);
-    font-size:11px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin:0 0 4px;
-  }
-  .amort-stat .stat-value{
-    font-family:var(--font-mono);
-    font-size:18px;
-    font-weight:500;
-    color:var(--ink);
-    margin:0;
-  }
-  .table-wrap{
-    max-height:560px;
-    overflow-y:auto;
-    border:1px solid var(--hairline);
-    border-radius:10px;
-  }
-  table.amort-table{
-    width:100%;
-    border-collapse:collapse;
-    font-family:var(--font-mono);
-    font-size:12.5px;
-  }
-  table.amort-table thead th{
-    position:sticky;
-    top:0;
-    background:var(--ink);
-    color:#fff;
-    text-align:right;
-    padding:10px 14px;
-    font-weight:500;
-    font-size:11px;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    z-index:1;
-  }
-  table.amort-table thead th:first-child,
-  table.amort-table thead th:nth-child(2){text-align:left;}
-  table.amort-table td{
-    text-align:right;
-    padding:8px 14px;
-    border-bottom:1px solid var(--hairline);
-    color:var(--navy-mid);
-    white-space:nowrap;
-  }
-  table.amort-table td:first-child,
-  table.amort-table td:nth-child(2){text-align:left;color:var(--ink);}
-  table.amort-table tbody tr:nth-child(12n+1){background:var(--paper);}
-  table.amort-table tbody tr.year-end td{border-bottom:1.5px solid var(--navy-line);}
-
-  @media (max-width:900px){
-    .grid-2{
-      grid-template-columns:1fr;
-      grid-template-areas:
-        "financing"
-        "income"
-        "comparison"
-        "outcome"
-        "breakdown";
-    }
-    .field-grid{grid-template-columns:1fr;}
-    .compare-bars{grid-template-columns:1fr;}
-    header{padding:22px 20px;}
-    main{padding:28px 20px 60px;}
-    .tabs-inner{padding:0 20px;}
-    .amort-controls{flex-direction:column;align-items:flex-start;}
-  }
+.hint{font-size:13px;color:var(--ink-soft);margin:14px 2px 0;max-width:70ch}
+kbd{
+  font:inherit;font-size:12px;background:var(--slot-empty);
+  border:1px solid var(--panel-line);border-radius:4px;padding:1px 5px;
+}
+@media (prefers-reduced-motion:no-preference){
+  .card{transition:border-color .18s ease, box-shadow .18s ease}
+}
 </style>
 </head>
 <body>
+<div class="wrap">
+  <header>
+    <h1 class="title">The O'Brien Family <em>Timeline</em></h1>
+    <p class="blurb">Sixty-one family moments, jumbled up. Drag them from the pile into the timeline — earliest at the top, most recent at the bottom — then check your order.</p>
+  </header>
 
-<header>
-  <div class="header-inner">
-    <div class="mark" aria-hidden="true"></div>
-    <div class="header-text">
-      <p class="eyebrow">See if your investment passes the 1% rule</p>
-      <h1>Rental Property Investment Calculator</h1>
+  <div class="controls">
+    <div class="ctl-group">
+      <span class="ctl-label">Memories per round</span>
+      <div class="seg" id="sizeSeg" role="group" aria-label="Memories per round"></div>
     </div>
-  </div>
-</header>
-
-<nav class="tabs">
-  <div class="tabs-inner">
-    <button class="tab-btn active" data-tab="calculator">Calculator</button>
-    <button class="tab-btn" data-tab="amortization">Amortization schedule</button>
-  </div>
-</nav>
-
-<main>
-
-  <div class="tab-panel active" id="panel-calculator">
-    <div class="grid-2">
-
-        <div class="card area-financing">
-          <h2>Property &amp; financing</h2>
-          <p class="card-sub">The purchase and loan terms for this deal.</p>
-          <div class="field-grid">
-
-            <div class="field">
-              <label for="homePrice">Home price</label>
-              <div class="input-wrap has-prefix">
-                <span class="prefix">$</span>
-                <input type="text" inputmode="decimal" class="fmt-currency" id="homePrice" value="300,000">
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="downPct">Percent down <span class="hint" id="downAmtHint"></span></label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="downPct" value="20" step="1" min="0" max="100">
-                <span class="suffix">%</span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="interestRate">Interest rate</label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="interestRate" value="6.75" step="0.05" min="0">
-                <span class="suffix">%</span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="loanTerm">Loan term</label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="loanTerm" value="30" step="1" min="1">
-                <span class="suffix">yrs</span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="insuranceMonthly">Estimated insurance</label>
-              <div class="input-wrap has-prefix has-suffix">
-                <span class="prefix">$</span>
-                <input type="text" inputmode="decimal" class="fmt-currency" id="insuranceMonthly" value="100">
-                <span class="suffix">/mo</span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="taxRate">Estimated tax rate <span class="hint">annual, of price</span></label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="taxRate" value="3" step="0.1" min="0">
-                <span class="suffix">%</span>
-              </div>
-            </div>
-
-            <div class="field full">
-              <label for="extraPayment">Extra monthly payment <span class="hint">toward principal</span></label>
-              <div class="input-wrap has-prefix">
-                <span class="prefix">$</span>
-                <input type="text" inputmode="decimal" class="fmt-currency" id="extraPayment" value="0">
-              </div>
-            </div>
-          </div>
-
-          <div class="extras-toggle" id="financeToggle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-            More financing assumptions
-          </div>
-          <div class="extras-body" id="financeExtras">
-            <hr class="divider" style="margin-top:0;">
-            <div class="field-grid">
-              <div class="field">
-                <label for="closingPct">Closing costs <span class="hint">of price, one-time</span></label>
-                <div class="input-wrap has-suffix">
-                  <input type="number" id="closingPct" value="3" step="0.5" min="0">
-                  <span class="suffix">%</span>
-                </div>
-              </div>
-              <div class="field">
-                <label for="hoaMonthly">HOA / condo fee</label>
-                <div class="input-wrap has-prefix has-suffix">
-                  <span class="prefix">$</span>
-                  <input type="text" inputmode="decimal" class="fmt-currency" id="hoaMonthly" value="0">
-                  <span class="suffix">/mo</span>
-                </div>
-              </div>
-              <div class="field full">
-                <label for="pmiRate">PMI rate <span class="hint">annual, applies only if down payment is under 20%</span></label>
-                <div class="input-wrap has-suffix">
-                  <input type="number" id="pmiRate" value="0.5" step="0.05" min="0">
-                  <span class="suffix">%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card-total">
-            <div class="ct-label">Estimated monthly payment
-              <span class="sub">Principal, interest, taxes, insurance, plus any extra payment</span>
-            </div>
-            <div class="ct-value" id="pitiTotal">—</div>
-          </div>
-        </div>
-
-        <div class="card area-income">
-          <h2>Income &amp; operating assumptions</h2>
-          <p class="card-sub">Rent roll and the costs of keeping units filled and in good shape.</p>
-          <div class="field-grid">
-
-            <div class="field">
-              <label for="units">Number of units</label>
-              <input type="number" id="units" value="2" step="1" min="1">
-            </div>
-
-            <div class="field">
-              <label for="rentPerUnit">Rent per unit</label>
-              <div class="input-wrap has-prefix has-suffix">
-                <span class="prefix">$</span>
-                <input type="text" inputmode="decimal" class="fmt-currency" id="rentPerUnit" value="1,500">
-                <span class="suffix">/mo</span>
-              </div>
-            </div>
-
-            <div class="field full">
-              <label for="vacancyRate">Estimated vacancy <span class="hint">of gross rent</span></label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="vacancyRate" value="5" step="0.5" min="0">
-                <span class="suffix">%</span>
-              </div>
-            </div>
-
-            <div class="field full">
-              <label for="capexRate">Estimated capital improvements <span class="hint">of gross rent</span></label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="capexRate" value="5" step="0.5" min="0">
-                <span class="suffix">%</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="extras-toggle" id="incomeToggle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-            More operating assumptions
-          </div>
-          <div class="extras-body" id="incomeExtras">
-            <hr class="divider" style="margin-top:0;">
-            <div class="field-grid">
-              <div class="field full">
-                <label for="mgmtRate">Property management <span class="hint">of gross rent, 0 if self-managed</span></label>
-                <div class="input-wrap has-suffix">
-                  <input type="number" id="mgmtRate" value="0" step="0.5" min="0">
-                  <span class="suffix">%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card-total">
-            <div class="ct-label">Total monthly rent
-              <span class="sub">All units, before vacancy or expenses</span>
-            </div>
-            <div class="ct-value" id="rentTotal">—</div>
-          </div>
-        </div>
-
-        <div class="card area-comparison">
-          <p class="section-label">Payment vs. rent, side by side</p>
-          <div class="compare-bars">
-            <div class="compare-item">
-              <p class="compare-label">Estimated monthly payment</p>
-              <p class="compare-value" id="cmpPaymentValue">—</p>
-              <div class="compare-bar-track"><div class="compare-bar-fill payment" id="cmpPaymentBar"></div></div>
-            </div>
-            <div class="compare-item">
-              <p class="compare-label">Total monthly rent</p>
-              <p class="compare-value" id="cmpRentValue">—</p>
-              <div class="compare-bar-track"><div class="compare-bar-fill rent" id="cmpRentBar"></div></div>
-            </div>
-          </div>
-          <p class="compare-delta" id="cmpDelta">—</p>
-        </div>
-
-        <div class="area-outcome">
-          <div class="signal-card">
-            <div class="signal-ring-wrap" id="signalPulseWrap">
-              <div class="signal-ring r1"></div>
-              <div class="signal-ring r2"></div>
-              <div class="signal-core" id="signalCore">1%</div>
-            </div>
-            <p class="signal-label">The 1% rule</p>
-            <p class="signal-verdict" id="signalVerdict">—</p>
-            <p class="signal-detail" id="signalDetail">—</p>
-          </div>
-
-          <div class="card metrics-card">
-            <div class="metric-row">
-              <div class="metric-name">Cap rate
-                <span class="sub">Net operating income ÷ home price. Financing-independent.</span>
-              </div>
-              <div class="metric-value" id="capRateValue">—</div>
-            </div>
-            <div class="metric-row">
-              <div class="metric-name">Cash-on-cash return
-                <span class="sub">Annual cash flow after your mortgage payment ÷ cash invested.</span>
-              </div>
-              <div class="metric-value" id="cocValue">—</div>
-            </div>
-            <div class="metric-row">
-              <div class="metric-name">Monthly cash flow
-                <span class="sub">What's left after every expense and the mortgage.</span>
-              </div>
-              <div class="metric-value" id="cashFlowValue">—</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card breakdown-card area-breakdown">
-          <p class="section-label">Monthly operating breakdown</p>
-          <div class="bd-row"><span>Gross rent</span><span id="bdRent">—</span></div>
-          <div class="bd-row"><span>Vacancy loss</span><span id="bdVacancy">—</span></div>
-          <div class="bd-row"><span>Capital improvements</span><span id="bdCapex">—</span></div>
-          <div class="bd-row"><span>Property management</span><span id="bdMgmt">—</span></div>
-          <div class="bd-row"><span>Property tax</span><span id="bdTax">—</span></div>
-          <div class="bd-row"><span>Insurance</span><span id="bdInsurance">—</span></div>
-          <div class="bd-row"><span>HOA</span><span id="bdHoa">—</span></div>
-          <div class="bd-row"><span>Principal &amp; interest</span><span id="bdPI">—</span></div>
-          <div class="bd-row"><span>PMI</span><span id="bdPmi">—</span></div>
-          <div class="bd-row"><span>Extra payment</span><span id="bdExtra">—</span></div>
-          <div class="bd-row total"><span>Net cash flow</span><span id="bdNet">—</span></div>
-          <p class="note">Cap rate follows the standard definition: net operating income (rent, minus vacancy, capital improvements, management, tax, insurance, and HOA) over the home price, with no mortgage in the equation. Cash-on-cash return is your actual return on the money you put in — it subtracts your mortgage payment, any extra payment, and PMI, then divides by your down payment plus closing costs. Both are estimates for planning purposes, not a substitute for a professional underwriting review.</p>
-        </div>
-
-    </div>
-  </div>
-
-  <div class="tab-panel" id="panel-amortization">
-    <div class="card">
-      <h2>Amortization schedule</h2>
-      <p class="card-sub">Month-by-month breakdown of your loan payoff, using the financing terms from the Calculator tab.</p>
-
-      <div class="amort-controls">
-        <div class="field" style="max-width:220px;">
-          <label for="startMonth">Loan start month</label>
-          <input type="month" id="startMonth">
-        </div>
-        <div class="amort-summary">
-          <div class="amort-stat">
-            <p class="stat-label">Payoff date</p>
-            <p class="stat-value" id="payoffDate">—</p>
-          </div>
-          <div class="amort-stat">
-            <p class="stat-label">Total interest paid</p>
-            <p class="stat-value" id="totalInterest">—</p>
-          </div>
-          <div class="amort-stat">
-            <p class="stat-label">Total P&amp;I paid</p>
-            <p class="stat-value" id="totalPaid">—</p>
-          </div>
-        </div>
-      </div>
-
-      <p class="card-sub" style="margin-top:-8px;">Total P&amp;I paid is your loan amount plus every dollar of interest paid over the life of the loan (principal + interest only) — it isn't the number of payments, and it excludes the down payment, taxes, insurance, HOA, and PMI, so it won't match the home price.</p>
-
-      <div class="table-wrap">
-        <table class="amort-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Date</th>
-              <th>Payment</th>
-              <th>Interest</th>
-              <th>Principal</th>
-              <th>Extra</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
-          <tbody id="amortBody"></tbody>
-        </table>
+    <div class="ctl-group">
+      <span class="ctl-label">Pick from</span>
+      <div class="seg" id="modeSeg" role="group" aria-label="How memories are drawn">
+        <button type="button" data-mode="spread" aria-pressed="true">All the years</button>
+        <button type="button" data-mode="run" aria-pressed="false">One stretch</button>
       </div>
     </div>
+    <div class="spacer"></div>
+    <button class="act" id="newRound" type="button">New round</button>
   </div>
 
-</main>
+  <div class="board">
+    <section class="col">
+      <div class="col-head">
+        <h2>The pile</h2>
+        <span class="meta" id="pileCount"></span>
+      </div>
+      <div class="pile" id="pile"></div>
+    </section>
+
+    <section class="col">
+      <div class="col-head">
+        <h2>The timeline</h2>
+        <span class="meta">1 is earliest</span>
+      </div>
+      <div class="slots" id="slots"></div>
+    </section>
+  </div>
+
+  <p class="hint">On a touchscreen you can also tap a memory, then tap the spot where it belongs. With a keyboard, <kbd>Tab</kbd> to a memory, <kbd>Enter</kbd> to pick it up, then <kbd>Enter</kbd> on a slot to drop it.</p>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <div class="status" id="status">Drag every memory into the timeline to check your order.</div>
+    <button class="act" id="returnWrong" type="button" hidden>Return the misplaced ones</button>
+    <button class="act" id="reveal" type="button">Show the answer</button>
+    <button class="act primary" id="check" type="button" disabled>Check order</button>
+  </div>
+</div>
 
 <script>
-(function(){
-  const ids = ['homePrice','downPct','interestRate','loanTerm','insuranceMonthly','taxRate','extraPayment',
-    'closingPct','hoaMonthly','pmiRate','units','rentPerUnit','vacancyRate','capexRate','mgmtRate'];
-  const el = {};
-  ids.forEach(id => el[id] = document.getElementById(id));
+"use strict";
 
-  const $ = id => document.getElementById(id);
-  const setText = (id, text) => { $(id).textContent = text; };
+/* The answer key: the O'Brien family history in order, as listed from page 8 of the document. */
+var STORIES = [
+  "Mom & Dad Build 690 Orchardview",
+  "Dad Graduates CSU with his MBA",
+  "Columbus Day Parade (in Columbus)",
+  "Sea World Opens in Cle",
+  "Dad Visits John Martin in Oregon",
+  "Canyon Valley State Park Trip",
+  "Disney Birthday Party at Tower City",
+  "Val bday at Chuck-e-Cheese",
+  "Maume Bay Trip",
+  "GBuddy\u2019s Retirment Party",
+  "Native American Puffy Paint Halloween Costumes",
+  "First Full Family Niagara Falls Trip",
+  "GBuddy\u2019s Surprise Bday Bowling Party",
+  "Ocean City Maryland Vaca",
+  "Get Dad His Schwin Bike",
+  "Jonah Musical at BCA",
+  "Mark Fails Safety Town",
+  "Vaca to the Polynesian at Wisconsin Dells",
+  "All Cousins Girl Outing to New York (Rochester)",
+  "Apple Valley With Haggerty\u2019s",
+  "Val & Kate in A Time for Christmas",
+  "South Dakota Camping Trip to See Mount Rushmore",
+  "Hart Ranch",
+  "Salt Fork with Szczecinski\u2019s (Laura and Steve)",
+  "Dad Finishes Basement for Girls",
+  "Hersey, PA Vaca",
+  "Philadelphia and Gettysburg",
+  "News Cast Halloween Costumes",
+  "GBuddy Makes All the Grandkids Christmas Jammies",
+  "Giddyup Getalong Gideon",
+  "Washington DC and Historical Williamsburg Trip",
+  "Niagara Falls and Toronto, Casa Loma",
+  "Right Team Sea World Summer Party",
+  "Historical Williamsburg Christmas",
+  "Olglebay Christmas with Extended Family",
+  "Wilmington NC to Visit the Peverals",
+  "BCA Go Go Jonah",
+  "Mark and Dad to California to Visit John and Jeremiah Martin",
+  "Vacation to New York City and Baseball Hall of Fame",
+  "Boston, Maine, Acadia Vacation",
+  "Bakers Move into The Flickers Nest",
+  "Annie Get Your Gun",
+  "Mom and Val Go To Moody\u2019s Founders Week in Chicago",
+  "Lauren Plays Rehab in BCA School Play",
+  "Family Vaca to the Smokey Mountains",
+  "First time to Rehoboth Beach Delaware",
+  "Lauren and Mom to NYC on Choir Tour",
+  "Family Trip to Chicago to Drop Val at Moody",
+  "Vaca from Hadies (Canoeing, Car Breaking Down, Saved by GBuddy)",
+  "Vacation with Snyders to North Carolina",
+  "My Fair Lady",
+  "Mom and Dad Pay Off House",
+  "Re-Enact Photos from Mom & Dad\u2019s Wedding",
+  "Britt and Mark Wedding in Nashville",
+  "Yosemite Trip",
+  "Thanksgiving Day Parade",
+  "Grand Canyon Trip",
+  "Ryan and Kate Meet at Halloween Party",
+  "Poland Trip",
+  "Family\u2019s First Trip to Lakeside",
+  "Ireland Trip"
+];
 
-  const fmtUSD = n => n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
-  const fmtUSD2 = n => n.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
-  const fmtPct = n => (Math.round(n*10)/10).toFixed(1) + '%';
-  const fmtParen = n => '(' + fmtUSD(n) + ')';
+var SIZES = [6, 10, 15, STORIES.length];
+var state = {
+  size: 10,
+  mode: "spread",
+  answer: [],     // story indices, in true order
+  pile: [],       // story indices still unplaced
+  slots: [],      // story index or null, per position
+  results: null,  // array of booleans once checked
+  revealed: false,
+  selected: null
+};
 
-  function num(id){
-    const raw = (el[id].value || '').toString().replace(/,/g, '');
-    const v = parseFloat(raw);
-    return isNaN(v) ? 0 : v;
+var pileEl = document.getElementById("pile");
+var slotsEl = document.getElementById("slots");
+var statusEl = document.getElementById("status");
+var checkBtn = document.getElementById("check");
+var revealBtn = document.getElementById("reveal");
+var returnBtn = document.getElementById("returnWrong");
+var pileCountEl = document.getElementById("pileCount");
+
+/* ---------- setup ---------- */
+
+function shuffled(arr){
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
   }
+  return a;
+}
 
-  // All financing, income, and outcome math lives here. Everything downstream
-  // (totals, the comparison bar, the signal, the breakdown) just reads this object.
-  function calculate(){
-    const homePrice = Math.max(num('homePrice'), 0);
-    const downPct = Math.min(Math.max(num('downPct'), 0), 100) / 100;
-    const downAmt = homePrice * downPct;
-    const loanAmt = Math.max(homePrice - downAmt, 0);
-    const annualRate = num('interestRate') / 100;
-    const termYears = Math.max(num('loanTerm'), 1);
-    const n = termYears * 12;
-    const r = annualRate / 12;
-
-    let pAndI = (r === 0) ? loanAmt / n : loanAmt * r / (1 - Math.pow(1 + r, -n));
-    if (!isFinite(pAndI)) pAndI = 0;
-
-    const insuranceMonthly = Math.max(num('insuranceMonthly'), 0);
-    const taxRate = Math.max(num('taxRate'), 0) / 100;
-    const taxMonthly = homePrice * taxRate / 12;
-    const extraPayment = Math.max(num('extraPayment'), 0);
-    const closingCosts = homePrice * (Math.max(num('closingPct'), 0) / 100);
-    const hoaMonthly = Math.max(num('hoaMonthly'), 0);
-    const pmiRate = Math.max(num('pmiRate'), 0) / 100;
-    const pmiMonthly = downPct < 0.20 ? (loanAmt * pmiRate / 12) : 0;
-
-    const units = Math.max(num('units'), 0);
-    const rentPerUnit = Math.max(num('rentPerUnit'), 0);
-    const grossRent = units * rentPerUnit;
-    const vacancyLoss = grossRent * (Math.max(num('vacancyRate'), 0) / 100);
-    const capexReserve = grossRent * (Math.max(num('capexRate'), 0) / 100);
-    const mgmtFee = grossRent * (Math.max(num('mgmtRate'), 0) / 100);
-
-    // Cap rate: net operating income only, no mortgage. Financing-independent.
-    const operatingExpenses = vacancyLoss + capexReserve + mgmtFee + taxMonthly + insuranceMonthly + hoaMonthly;
-    const noiMonthly = grossRent - operatingExpenses;
-    const capRate = homePrice > 0 ? (noiMonthly * 12 / homePrice) * 100 : 0;
-
-    // Cash-on-cash: what's actually left after the mortgage, extra payment, and PMI,
-    // measured against the cash you put in (down payment + closing costs).
-    const debtServiceMonthly = pAndI + extraPayment + pmiMonthly;
-    const cashFlowMonthly = noiMonthly - debtServiceMonthly;
-    const totalCashInvested = downAmt + closingCosts;
-    const coc = totalCashInvested > 0 ? (cashFlowMonthly * 12 / totalCashInvested) * 100 : 0;
-
-    // The 1% rule: gross rent vs. 1% of the home price.
-    const onePercentThreshold = homePrice * 0.01;
-    const onePercentRatio = homePrice > 0 ? (grossRent / homePrice) * 100 : 0;
-    const passes = grossRent >= onePercentThreshold;
-
-    // Estimated monthly payment: principal, interest, taxes, insurance, plus any extra payment.
-    const pitiMonthly = pAndI + taxMonthly + insuranceMonthly + extraPayment;
-
-    return {
-      homePrice, downAmt, loanAmt, r, n, pAndI, insuranceMonthly, taxMonthly, extraPayment,
-      hoaMonthly, pmiMonthly, grossRent, vacancyLoss, capexReserve, mgmtFee,
-      noiMonthly, capRate, cashFlowMonthly, coc, onePercentThreshold, onePercentRatio, passes, pitiMonthly
-    };
-  }
-
-  function renderTotals(c){
-    setText('downAmtHint', fmtUSD(c.downAmt));
-    setText('pitiTotal', fmtUSD(c.pitiMonthly));
-    setText('rentTotal', fmtUSD(c.grossRent));
-  }
-
-  function renderComparison(c){
-    const maxCompare = Math.max(c.pitiMonthly, c.grossRent, 1);
-    setText('cmpPaymentValue', fmtUSD(c.pitiMonthly));
-    setText('cmpRentValue', fmtUSD(c.grossRent));
-    $('cmpPaymentBar').style.width = (c.pitiMonthly / maxCompare * 100) + '%';
-    $('cmpRentBar').style.width = (c.grossRent / maxCompare * 100) + '%';
-
-    const cmpDelta = $('cmpDelta');
-    const deltaAmt = c.grossRent - c.pitiMonthly;
-    const surplus = deltaAmt >= 0;
-    cmpDelta.textContent = surplus
-      ? 'Rent exceeds your estimated monthly payment by ' + fmtUSD(deltaAmt) + ' a month.'
-      : 'Your estimated monthly payment exceeds rent by ' + fmtUSD(Math.abs(deltaAmt)) + ' a month.';
-    cmpDelta.classList.toggle('positive', surplus);
-    cmpDelta.classList.toggle('negative', !surplus);
-  }
-
-  function renderSignal(c){
-    const core = $('signalCore');
-    const wrap = $('signalPulseWrap');
-    $('signalVerdict').textContent = c.passes ? 'Passes' : 'Falls short';
-    core.classList.toggle('fail', !c.passes);
-    wrap.classList.toggle('pulse', c.passes);
-    setText('signalDetail', fmtUSD(c.grossRent) + ' rent vs. ' + fmtUSD(c.onePercentThreshold) + ' threshold (' + fmtPct(c.onePercentRatio) + ' of price)');
-    core.textContent = fmtPct(c.onePercentRatio);
-  }
-
-  function renderMetrics(c){
-    const capRateEl = $('capRateValue');
-    capRateEl.textContent = fmtPct(c.capRate);
-    capRateEl.classList.toggle('positive', c.capRate >= 0);
-    capRateEl.classList.toggle('negative', c.capRate < 0);
-
-    const cocEl = $('cocValue');
-    cocEl.textContent = fmtPct(c.coc);
-    cocEl.classList.toggle('positive', c.coc >= 0);
-    cocEl.classList.toggle('negative', c.coc < 0);
-
-    const cfEl = $('cashFlowValue');
-    cfEl.textContent = fmtUSD(c.cashFlowMonthly);
-    cfEl.classList.toggle('positive', c.cashFlowMonthly >= 0);
-    cfEl.classList.toggle('negative', c.cashFlowMonthly < 0);
-  }
-
-  function renderBreakdown(c){
-    setText('bdRent', fmtUSD(c.grossRent));
-    setText('bdVacancy', fmtParen(c.vacancyLoss));
-    setText('bdCapex', fmtParen(c.capexReserve));
-    setText('bdMgmt', fmtParen(c.mgmtFee));
-    setText('bdTax', fmtParen(c.taxMonthly));
-    setText('bdInsurance', fmtParen(c.insuranceMonthly));
-    setText('bdHoa', fmtParen(c.hoaMonthly));
-    setText('bdPI', fmtParen(c.pAndI));
-    setText('bdPmi', fmtParen(c.pmiMonthly));
-    setText('bdExtra', fmtParen(c.extraPayment));
-    setText('bdNet', fmtUSD(c.cashFlowMonthly));
-  }
-
-  function render(){
-    const c = calculate();
-    renderTotals(c);
-    renderComparison(c);
-    renderSignal(c);
-    renderMetrics(c);
-    renderBreakdown(c);
-    renderAmortization(c);
-  }
-
-  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-  function getAmortStartDate(){
-    const startVal = $('startMonth').value;
-    if (startVal) {
-      const [y, m] = startVal.split('-');
-      return { year: parseInt(y, 10), monthIdx: parseInt(m, 10) - 1 };
-    }
-    const now = new Date();
-    return { year: now.getFullYear(), monthIdx: now.getMonth() };
-  }
-
-  // Runs the same loan forward month by month. The extra payment (if any) goes
-  // straight to principal, so a higher extra payment shortens the schedule and
-  // lowers total interest automatically.
-  function buildAmortizationRows(c, start){
-    const rows = [];
-    let balance = c.loanAmt;
-    const maxMonths = Math.round(c.n) + 2;
-
-    for (let i = 1; i <= maxMonths && balance > 0.005; i++) {
-      const interest = balance * c.r;
-      let scheduledPrincipal = Math.max(c.pAndI - interest, 0);
-      let extra = c.extraPayment;
-      let totalPrincipal = scheduledPrincipal + extra;
-      let paymentAmount = c.pAndI + extra;
-
-      if (totalPrincipal >= balance) {
-        totalPrincipal = balance;
-        scheduledPrincipal = Math.min(scheduledPrincipal, totalPrincipal);
-        extra = totalPrincipal - scheduledPrincipal;
-        paymentAmount = interest + totalPrincipal;
-      }
-
-      balance -= totalPrincipal;
-
-      const dateIdx = start.monthIdx + (i - 1);
-      const year = start.year + Math.floor(dateIdx / 12);
-      const monthLabel = monthNames[((dateIdx % 12) + 12) % 12];
-
-      rows.push({
-        i, label: monthLabel + ' ' + year, payment: paymentAmount,
-        interest, principal: scheduledPrincipal, extra, balance, isYearEnd: (i % 12 === 0)
+function buildSizeButtons(){
+  var seg = document.getElementById("sizeSeg");
+  SIZES.forEach(function(n){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = (n === STORIES.length) ? "All " + n : String(n);
+    b.setAttribute("aria-pressed", n === state.size ? "true" : "false");
+    b.addEventListener("click", function(){
+      state.size = n;
+      Array.prototype.forEach.call(seg.children, function(c){
+        c.setAttribute("aria-pressed", c === b ? "true" : "false");
       });
-    }
-    return rows;
-  }
-
-  function renderAmortization(c){
-    const rows = buildAmortizationRows(c, getAmortStartDate());
-
-    const frag = document.createDocumentFragment();
-    rows.forEach(row => {
-      const tr = document.createElement('tr');
-      if (row.isYearEnd) tr.className = 'year-end';
-      tr.innerHTML = '<td>' + row.i + '</td>' +
-        '<td>' + row.label + '</td>' +
-        '<td>' + fmtUSD2(row.payment) + '</td>' +
-        '<td>' + fmtUSD2(row.interest) + '</td>' +
-        '<td>' + fmtUSD2(row.principal) + '</td>' +
-        '<td>' + fmtUSD2(row.extra) + '</td>' +
-        '<td>' + fmtUSD2(Math.max(row.balance, 0)) + '</td>';
-      frag.appendChild(tr);
+      newRound();
     });
-
-    const body = $('amortBody');
-    body.innerHTML = '';
-    body.appendChild(frag);
-
-    const totalInterest = rows.reduce((sum, row) => sum + row.interest, 0);
-    const totalPI = rows.reduce((sum, row) => sum + row.payment, 0);
-    const lastRow = rows[rows.length - 1];
-    setText('payoffDate', lastRow ? lastRow.label : '—');
-    setText('totalInterest', fmtUSD(totalInterest));
-    setText('totalPaid', fmtUSD(totalPI));
-  }
-
-  // Recalculate on every input change.
-  ids.forEach(id => el[id].addEventListener('input', render));
-  $('startMonth').addEventListener('input', render);
-
-  // Currency fields show comma-formatted values at rest, and plain digits while
-  // being edited so typing isn't fighting the formatter.
-  const currencyIds = ['homePrice','insuranceMonthly','extraPayment','hoaMonthly','rentPerUnit'];
-  function formatCommas(id){
-    const raw = el[id].value.toString().replace(/,/g, '');
-    if (raw === '' || isNaN(raw)) return;
-    el[id].value = Number(raw).toLocaleString('en-US');
-  }
-  currencyIds.forEach(id => {
-    el[id].addEventListener('focus', () => { el[id].value = el[id].value.replace(/,/g, ''); });
-    el[id].addEventListener('blur', () => formatCommas(id));
-    formatCommas(id);
+    seg.appendChild(b);
   });
+}
 
-  function wireToggle(toggleId, bodyId){
-    const t = $(toggleId), b = $(bodyId);
-    t.addEventListener('click', () => {
-      t.classList.toggle('open');
-      b.classList.toggle('show');
-    });
-  }
-  wireToggle('financeToggle', 'financeExtras');
-  wireToggle('incomeToggle', 'incomeExtras');
-
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      $('panel-' + btn.dataset.tab).classList.add('active');
-    });
+document.getElementById("modeSeg").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-mode]");
+  if (!b) return;
+  state.mode = b.dataset.mode;
+  Array.prototype.forEach.call(this.children, function(c){
+    c.setAttribute("aria-pressed", c === b ? "true" : "false");
   });
+  newRound();
+});
 
-  const today = new Date();
-  $('startMonth').value = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+document.getElementById("newRound").addEventListener("click", newRound);
 
+function newRound(){
+  var n = Math.min(state.size, STORIES.length);
+  var picked;
+  if (state.mode === "run" && n < STORIES.length){
+    var start = Math.floor(Math.random() * (STORIES.length - n + 1));
+    picked = [];
+    for (var i = 0; i < n; i++) picked.push(start + i);
+  } else {
+    var all = [];
+    for (var k = 0; k < STORIES.length; k++) all.push(k);
+    picked = shuffled(all).slice(0, n).sort(function(a, b){ return a - b; });
+  }
+  state.answer = picked;
+  state.pile = shuffled(picked);
+  state.slots = new Array(n).fill(null);
+  state.results = null;
+  state.revealed = false;
+  state.selected = null;
   render();
-})();
-</script>
+  setStatus("Drag every memory into the timeline to check your order.");
+}
 
+/* ---------- rendering ---------- */
+
+function makeCard(storyIndex, opts){
+  opts = opts || {};
+  var el = document.createElement("div");
+  el.className = "card";
+  el.dataset.story = String(storyIndex);
+  el.setAttribute("role", "button");
+  el.tabIndex = 0;
+  el.setAttribute("aria-label", STORIES[storyIndex]);
+
+  var txt = document.createElement("span");
+  txt.className = "txt";
+  txt.textContent = STORIES[storyIndex];
+  el.appendChild(txt);
+
+  if (opts.mark){
+    var m = document.createElement("span");
+    m.className = "mark";
+    m.textContent = opts.mark;
+    el.appendChild(m);
+  }
+  if (opts.cls) el.classList.add(opts.cls);
+  if (state.selected === storyIndex) el.classList.add("selected");
+  if (state.revealed){ el.classList.add("locked"); el.tabIndex = -1; }
+  return el;
+}
+
+function render(){
+  // pile
+  pileEl.innerHTML = "";
+  if (state.pile.length === 0){
+    var empty = document.createElement("div");
+    empty.className = "pile-empty";
+    empty.textContent = state.revealed ? "Round over." : "Pile empty — check your order below.";
+    pileEl.appendChild(empty);
+  } else {
+    state.pile.forEach(function(si){
+      pileEl.appendChild(makeCard(si));
+    });
+  }
+  pileCountEl.textContent = state.pile.length + " left";
+
+  // slots
+  slotsEl.innerHTML = "";
+  state.slots.forEach(function(si, i){
+    var slot = document.createElement("div");
+    slot.className = "slot";
+    slot.dataset.slot = String(i);
+
+    var num = document.createElement("div");
+    num.className = "num";
+    num.textContent = String(i + 1);
+    slot.appendChild(num);
+
+    var well = document.createElement("div");
+    well.className = "well";
+    if (si !== null){
+      well.classList.add("filled");
+      var opts = {};
+      if (state.results){
+        if (state.results[i]){ opts.cls = "right"; opts.mark = "\u2713"; }
+        else {
+          opts.cls = "wrong";
+          var trueIdx = state.answer.indexOf(si);
+          opts.mark = trueIdx < i ? "\u2191 earlier" : "\u2193 later";
+        }
+      }
+      well.appendChild(makeCard(si, opts));
+    } else {
+      well.setAttribute("role", "button");
+      well.tabIndex = 0;
+      well.setAttribute("aria-label", "Empty spot " + (i + 1));
+    }
+    slot.appendChild(well);
+    slotsEl.appendChild(slot);
+  });
+
+  var full = state.slots.every(function(s){ return s !== null; });
+  checkBtn.disabled = !full || state.revealed;
+  revealBtn.disabled = state.revealed;
+  returnBtn.hidden = !(state.results && !state.revealed && state.results.indexOf(false) !== -1);
+}
+
+function setStatus(html){ statusEl.innerHTML = html; }
+
+/* ---------- moving cards ---------- */
+
+function locationOf(storyIndex){
+  var p = state.pile.indexOf(storyIndex);
+  if (p !== -1) return { where: "pile", index: p };
+  var s = state.slots.indexOf(storyIndex);
+  if (s !== -1) return { where: "slot", index: s };
+  return null;
+}
+
+function clearResults(){
+  if (state.results){ state.results = null; setStatus("Order changed — check again when you're ready."); }
+}
+
+function placeInSlot(storyIndex, slotIndex){
+  if (state.revealed) return;
+  var from = locationOf(storyIndex);
+  if (!from) return;
+  if (from.where === "slot" && from.index === slotIndex) return;
+
+  var occupant = state.slots[slotIndex];
+  if (from.where === "slot") state.slots[from.index] = null;
+  else state.pile.splice(from.index, 1);
+
+  state.slots[slotIndex] = storyIndex;
+
+  if (occupant !== null && occupant !== undefined){
+    if (from.where === "slot") state.slots[from.index] = occupant;  // swap
+    else state.pile.push(occupant);                                 // bumped back to pile
+  }
+  clearResults();
+  state.selected = null;
+  render();
+}
+
+function returnToPile(storyIndex){
+  if (state.revealed) return;
+  var from = locationOf(storyIndex);
+  if (!from || from.where === "pile") return;
+  state.slots[from.index] = null;
+  state.pile.push(storyIndex);
+  clearResults();
+  state.selected = null;
+  render();
+}
+
+/* ---------- pointer dragging ---------- */
+
+var drag = null;
+
+document.addEventListener("pointerdown", function(e){
+  if (e.button !== undefined && e.button > 0) return;
+  var card = e.target.closest(".card");
+  if (!card || state.revealed) return;
+  drag = {
+    id: parseInt(card.dataset.story, 10),
+    startX: e.clientX, startY: e.clientY,
+    x: e.clientX, y: e.clientY,
+    el: card, ghost: null, moved: false,
+    offX: 0, offY: 0, w: card.getBoundingClientRect().width,
+    pointerId: e.pointerId
+  };
+  var r = card.getBoundingClientRect();
+  drag.offX = e.clientX - r.left;
+  drag.offY = e.clientY - r.top;
+});
+
+document.addEventListener("pointermove", function(e){
+  if (!drag || e.pointerId !== drag.pointerId) return;
+  drag.x = e.clientX; drag.y = e.clientY;
+  if (!drag.moved){
+    if (Math.abs(e.clientX - drag.startX) < 6 && Math.abs(e.clientY - drag.startY) < 6) return;
+    drag.moved = true;
+    startGhost();
+  }
+  e.preventDefault();
+  moveGhost();
+  highlightTarget(targetAt(e.clientX, e.clientY));
+  autoScroll(e.clientY);
+}, { passive: false });
+
+document.addEventListener("pointerup", endDrag);
+document.addEventListener("pointercancel", endDrag);
+
+function startGhost(){
+  var g = drag.el.cloneNode(true);
+  g.id = "ghost";
+  g.classList.remove("selected");
+  g.style.width = drag.w + "px";
+  document.body.appendChild(g);
+  drag.ghost = g;
+  drag.el.classList.add("dragging");
+}
+
+function moveGhost(){
+  if (!drag.ghost) return;
+  drag.ghost.style.transform =
+    "translate(" + (drag.x - drag.offX) + "px," + (drag.y - drag.offY) + "px) rotate(-1.2deg)";
+}
+
+function targetAt(x, y){
+  var stack = document.elementsFromPoint(x, y);
+  for (var i = 0; i < stack.length; i++){
+    var el = stack[i];
+    if (el.id === "ghost") continue;
+    var slot = el.closest ? el.closest(".slot") : null;
+    if (slot) return { kind: "slot", el: slot, index: parseInt(slot.dataset.slot, 10) };
+    var pile = el.closest ? el.closest("#pile") : null;
+    if (pile) return { kind: "pile", el: pile };
+  }
+  return null;
+}
+
+function highlightTarget(t){
+  Array.prototype.forEach.call(document.querySelectorAll(".drop-hot"), function(el){
+    el.classList.remove("drop-hot");
+  });
+  if (t) t.el.classList.add("drop-hot");
+}
+
+var scrollTimer = null;
+function autoScroll(y){
+  var edge = 70, speed = 0;
+  if (y < edge) speed = -Math.ceil((edge - y) / 5);
+  else if (y > window.innerHeight - edge) speed = Math.ceil((y - (window.innerHeight - edge)) / 5);
+  if (scrollTimer){ clearInterval(scrollTimer); scrollTimer = null; }
+  if (speed !== 0){
+    scrollTimer = setInterval(function(){
+      if (!drag){ clearInterval(scrollTimer); scrollTimer = null; return; }
+      window.scrollBy(0, speed);
+      moveGhost();
+    }, 16);
+  }
+}
+
+function endDrag(e){
+  if (!drag) return;
+  if (scrollTimer){ clearInterval(scrollTimer); scrollTimer = null; }
+  var d = drag;
+  drag = null;
+  if (d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
+  d.el.classList.remove("dragging");
+  highlightTarget(null);
+
+  if (!d.moved){ toggleSelect(d.id); return; }   // a tap, not a drag
+  var t = targetAt(e.clientX, e.clientY);
+  if (!t){ render(); return; }
+  if (t.kind === "slot") placeInSlot(d.id, t.index);
+  else returnToPile(d.id);
+}
+
+/* ---------- tap / keyboard placing ---------- */
+
+function toggleSelect(storyIndex){
+  if (state.revealed) return;
+  if (state.selected === storyIndex) state.selected = null;
+  else if (state.selected !== null && state.selected !== storyIndex){
+    // tapping another card while one is held: drop the held one onto that card's spot
+    var target = locationOf(storyIndex);
+    var held = state.selected;
+    state.selected = null;
+    if (target && target.where === "slot"){ placeInSlot(held, target.index); return; }
+    state.selected = storyIndex;
+  } else {
+    state.selected = storyIndex;
+  }
+  render();
+}
+
+document.addEventListener("click", function(e){
+  var well = e.target.closest(".well");
+  if (well && !e.target.closest(".card") && state.selected !== null){
+    var slot = well.closest(".slot");
+    if (slot) placeInSlot(state.selected, parseInt(slot.dataset.slot, 10));
+    return;
+  }
+  if (e.target.closest("#pile") && !e.target.closest(".card") && state.selected !== null){
+    returnToPile(state.selected);
+  }
+});
+
+document.addEventListener("keydown", function(e){
+  if (e.key !== "Enter" && e.key !== " ") return;
+  var card = e.target.closest ? e.target.closest(".card") : null;
+  if (card){ e.preventDefault(); toggleSelect(parseInt(card.dataset.story, 10)); return; }
+  var well = e.target.closest ? e.target.closest(".well") : null;
+  if (well && state.selected !== null){
+    e.preventDefault();
+    var slot = well.closest(".slot");
+    if (slot) placeInSlot(state.selected, parseInt(slot.dataset.slot, 10));
+  }
+});
+
+/* ---------- checking ---------- */
+
+checkBtn.addEventListener("click", function(){
+  var n = state.slots.length;
+  var res = [], right = 0;
+  for (var i = 0; i < n; i++){
+    var ok = state.slots[i] === state.answer[i];
+    res.push(ok);
+    if (ok) right++;
+  }
+  state.results = res;
+  state.selected = null;
+  render();
+
+  var msg;
+  if (right === n){
+    msg = "<strong class='good'>Perfect \u2014 all " + n + " in order.</strong> Someone was paying attention.";
+    saveBest(n, right);
+  } else if (right === 0){
+    msg = "<strong class='bad'>0 of " + n + " in the right spot.</strong> The arrows show which way each one belongs.";
+  } else {
+    msg = "<strong>" + right + " of " + n + "</strong> in the right spot. The arrows show which way the rest belong.";
+    saveBest(n, right);
+  }
+  var best = loadBest(n);
+  if (best !== null && right < n) msg += " <span style='opacity:.7'>Best on " + n + ": " + best + "</span>";
+  setStatus(msg);
+});
+
+returnBtn.addEventListener("click", function(){
+  for (var i = 0; i < state.slots.length; i++){
+    if (state.results && !state.results[i] && state.slots[i] !== null){
+      state.pile.push(state.slots[i]);
+      state.slots[i] = null;
+    }
+  }
+  state.pile = shuffled(state.pile);
+  state.results = null;
+  render();
+  setStatus("The correct ones stayed put. Try the rest again.");
+});
+
+revealBtn.addEventListener("click", function(){
+  state.slots = state.answer.slice();
+  state.pile = [];
+  state.results = state.answer.map(function(){ return true; });
+  state.revealed = true;
+  state.selected = null;
+  render();
+  setStatus("Here's the true order, earliest to most recent. Start a new round when you're ready.");
+});
+
+/* ---------- best score (this device only) ---------- */
+
+function saveBest(n, right){
+  try {
+    var key = "obrien-timeline-best-" + n;
+    var prev = window.localStorage.getItem(key);
+    if (prev === null || right > parseInt(prev, 10)) window.localStorage.setItem(key, String(right));
+  } catch (err){ /* storage unavailable — scores just aren't kept */ }
+}
+function loadBest(n){
+  try {
+    var v = window.localStorage.getItem("obrien-timeline-best-" + n);
+    return v === null ? null : parseInt(v, 10) + " of " + n;
+  } catch (err){ return null; }
+}
+
+buildSizeButtons();
+newRound();
+</script>
 </body>
 </html>
