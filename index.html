@@ -27,69 +27,38 @@
   --radius:10px;
 }
 :root[data-theme="light"]{
-  --bg:#e9e0d1;
-  --bg-deep:#ded3c0;
-  --panel:#f3ece0;
-  --panel-line:#cfc2ac;
-  --ink:#232830;
-  --ink-soft:#6a6254;
-  --card:#ffffff;
-  --card-ink:#232830;
-  --card-ink-soft:#6a7180;
-  --accent:#b0700f;
-  --accent-ink:#fff8ec;
-  --right:#3d7f5c;
-  --wrong:#b4503f;
-  --slot-empty:rgba(0,0,0,.035);
-  --shadow:0 8px 20px rgba(60,45,20,.18);
+  --bg:#e9e0d1; --bg-deep:#ded3c0; --panel:#f3ece0; --panel-line:#cfc2ac;
+  --ink:#232830; --ink-soft:#6a6254; --card:#ffffff; --card-ink:#232830; --card-ink-soft:#6a7180;
+  --accent:#b0700f; --accent-ink:#fff8ec; --right:#3d7f5c; --wrong:#b4503f;
+  --slot-empty:rgba(0,0,0,.035); --shadow:0 8px 20px rgba(60,45,20,.18);
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme="dark"]){
-    --bg:#e9e0d1;
-    --bg-deep:#ded3c0;
-    --panel:#f3ece0;
-    --panel-line:#cfc2ac;
-    --ink:#232830;
-    --ink-soft:#6a6254;
-    --card:#ffffff;
-    --card-ink:#232830;
-    --card-ink-soft:#6a7180;
-    --accent:#b0700f;
-    --accent-ink:#fff8ec;
-    --right:#3d7f5c;
-    --wrong:#b4503f;
-    --slot-empty:rgba(0,0,0,.035);
-    --shadow:0 8px 20px rgba(60,45,20,.18);
+    --bg:#e9e0d1; --bg-deep:#ded3c0; --panel:#f3ece0; --panel-line:#cfc2ac;
+    --ink:#232830; --ink-soft:#6a6254; --card:#ffffff; --card-ink:#232830; --card-ink-soft:#6a7180;
+    --accent:#b0700f; --accent-ink:#fff8ec; --right:#3d7f5c; --wrong:#b4503f;
+    --slot-empty:rgba(0,0,0,.035); --shadow:0 8px 20px rgba(60,45,20,.18);
   }
 }
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  background:var(--bg);
-  color:var(--ink);
+  background:var(--bg); color:var(--ink);
   font-family:"Work Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-  font-size:16px;
-  line-height:1.45;
-  -webkit-text-size-adjust:100%;
+  font-size:16px; line-height:1.45; -webkit-text-size-adjust:100%;
   overscroll-behavior-y:contain;
 }
-.wrap{max-width:1180px;margin:0 auto;padding:22px 16px 140px}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 16px 150px}
 
-/* ---------- header ---------- */
 header{margin-bottom:18px}
 .title{
-  font-family:"Fraunces",Georgia,"Times New Roman",serif;
-  font-weight:600;
-  font-size:clamp(30px,5.4vw,46px);
-  line-height:1.03;
-  letter-spacing:-.015em;
-  margin:0 0 6px;
+  font-family:"Fraunces",Georgia,"Times New Roman",serif; font-weight:600;
+  font-size:clamp(30px,5.4vw,46px); line-height:1.03; letter-spacing:-.015em; margin:0 0 6px;
 }
 .title em{font-style:italic;color:var(--accent)}
 .blurb{margin:0;color:var(--ink-soft);max-width:60ch;font-size:15px}
 
-/* ---------- controls ---------- */
 .controls{
   display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;
   margin:16px 0 6px;padding:12px 14px;
@@ -98,80 +67,70 @@ header{margin-bottom:18px}
 .ctl-group{display:flex;align-items:center;gap:8px}
 .ctl-label{font-size:13px;color:var(--ink-soft)}
 .seg{display:flex;border:1px solid var(--panel-line);border-radius:8px;overflow:hidden}
-.seg button{
-  font:inherit;font-size:14px;padding:6px 12px;border:0;cursor:pointer;
-  background:transparent;color:var(--ink);
-}
+.seg button{font:inherit;font-size:14px;padding:6px 12px;border:0;cursor:pointer;background:transparent;color:var(--ink)}
 .seg button + button{border-left:1px solid var(--panel-line)}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
 .spacer{flex:1 1 auto}
 
 button.act{
-  font:inherit;font-size:14px;font-weight:600;cursor:pointer;
-  padding:8px 16px;border-radius:8px;
+  font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:8px 16px;border-radius:8px;
   border:1px solid var(--panel-line);background:transparent;color:var(--ink);
 }
 button.act.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
 button.act:disabled{opacity:.42;cursor:default}
 button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
-/* ---------- board ---------- */
-.board{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;align-items:start}
 @media (max-width:860px){.board{grid-template-columns:1fr}}
 
-.col{
-  background:var(--panel);border:1px solid var(--panel-line);
-  border-radius:var(--radius);padding:12px;min-width:0;
-}
+.col{background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);padding:12px;min-width:0}
 .col-head{
   display:flex;align-items:baseline;justify-content:space-between;gap:10px;
   padding:0 2px 10px;border-bottom:1px solid var(--panel-line);margin-bottom:10px;
 }
-.col-head h2{
-  font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:0;letter-spacing:-.01em;
-}
+.col-head h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:0;letter-spacing:-.01em}
 .col-head .meta{font-size:13px;color:var(--ink-soft)}
 
 .pile{display:flex;flex-direction:column;gap:8px;min-height:90px}
 .pile.drop-hot{outline:2px dashed var(--accent);outline-offset:6px;border-radius:8px}
-.pile-empty{
-  color:var(--ink-soft);font-size:14px;text-align:center;padding:26px 10px;
-  border:1px dashed var(--panel-line);border-radius:8px;
-}
+.pile-empty{color:var(--ink-soft);font-size:14px;text-align:center;padding:26px 10px;border:1px dashed var(--panel-line);border-radius:8px}
 
-.slots{display:flex;flex-direction:column;gap:8px;counter-reset:slot}
-.slot{
-  display:grid;grid-template-columns:34px 1fr;align-items:stretch;gap:8px;
-  border-radius:8px;
-}
-.slot .num{
+/* ---------- timeline: rows separated by insertion gaps ---------- */
+.timeline{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:stretch}
+.row .num{
   display:flex;align-items:center;justify-content:center;
   font-family:"Fraunces",Georgia,serif;font-size:15px;color:var(--ink-soft);
   border-right:1px solid var(--panel-line);
 }
-.slot.drop-hot .num{color:var(--accent)}
-.slot .well{
-  min-height:48px;border-radius:8px;border:1px dashed var(--panel-line);
-  background:var(--slot-empty);display:flex;align-items:center;padding:0;
+.row.empty .well{
+  min-height:48px;border-radius:8px;border:1px dashed var(--panel-line);background:var(--slot-empty);
 }
-.slot .well.filled{border:0;background:transparent;padding:0}
-.slot.drop-hot .well{border-color:var(--accent);background:rgba(232,163,61,.13)}
+.row.empty + .row.empty,.row.empty{margin-top:8px}
+.row.empty:first-child{margin-top:0}
 
-/* ---------- cards ---------- */
+.gap{height:10px;position:relative;flex:0 0 auto}
+.gap::after{
+  content:"";position:absolute;left:42px;right:2px;top:50%;height:3px;
+  transform:translateY(-1.5px);border-radius:3px;background:transparent;
+}
+.gap.hot::after{background:var(--accent)}
+.timeline.selecting .gap{height:20px;cursor:pointer}
+.timeline.selecting .gap::after{background:var(--panel-line)}
+.timeline.selecting .gap:hover::after{background:var(--accent)}
+.gap:focus-visible{outline:3px solid var(--accent);outline-offset:-2px;border-radius:4px}
+
 .card{
   width:100%;display:flex;align-items:center;gap:10px;
   background:var(--card);color:var(--card-ink);
   border-radius:8px;border:0;border-left:4px solid var(--card);
-  box-shadow:var(--shadow);
-  padding:11px 12px;font:inherit;font-size:15px;text-align:left;line-height:1.3;
+  box-shadow:var(--shadow);padding:11px 12px;
+  font:inherit;font-size:15px;text-align:left;line-height:1.3;
   cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
 }
 .card:active{cursor:grabbing}
 .card .txt{flex:1 1 auto;min-width:0}
-.card .mark{
-  flex:0 0 auto;font-size:13px;font-weight:600;color:var(--card-ink-soft);
-  display:flex;align-items:center;gap:4px;
-}
+.card .mark{flex:0 0 auto;font-size:13px;font-weight:600;color:var(--card-ink-soft);display:flex;align-items:center;gap:4px}
 .card.selected{outline:3px solid var(--accent);outline-offset:2px}
 .card.dragging{opacity:.28}
 .card.right{border-left-color:var(--right)}
@@ -182,31 +141,25 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);ou
 
 #ghost{
   position:fixed;left:0;top:0;z-index:99;pointer-events:none;
-  box-shadow:0 18px 34px rgba(0,0,0,.45);transform:rotate(-1.2deg);
-  opacity:.97;
+  box-shadow:0 18px 34px rgba(0,0,0,.45);transform:rotate(-1.2deg);opacity:.97;
 }
 
-/* ---------- result bar ---------- */
 .bar{
   position:fixed;left:0;right:0;bottom:0;z-index:40;
   background:var(--bg-deep);border-top:1px solid var(--panel-line);
   padding:10px 16px calc(10px + env(safe-area-inset-bottom));
 }
-.bar-inner{
-  max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-}
+.bar-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .status{font-size:15px;min-width:0;flex:1 1 220px}
 .status strong{font-family:"Fraunces",Georgia,serif;font-size:17px}
 .status .good{color:var(--right)}
 .status .bad{color:var(--wrong)}
 
 .hint{font-size:13px;color:var(--ink-soft);margin:14px 2px 0;max-width:70ch}
-kbd{
-  font:inherit;font-size:12px;background:var(--slot-empty);
-  border:1px solid var(--panel-line);border-radius:4px;padding:1px 5px;
-}
+kbd{font:inherit;font-size:12px;background:var(--slot-empty);border:1px solid var(--panel-line);border-radius:4px;padding:1px 5px}
 @media (prefers-reduced-motion:no-preference){
   .card{transition:border-color .18s ease, box-shadow .18s ease}
+  .gap{transition:height .12s ease}
 }
 </style>
 </head>
@@ -214,7 +167,7 @@ kbd{
 <div class="wrap">
   <header>
     <h1 class="title">The O'Brien Family <em>Timeline</em></h1>
-    <p class="blurb">Sixty-one family moments, jumbled up. Drag them from the pile into the timeline — earliest at the top, most recent at the bottom — then check your order.</p>
+    <p class="blurb">Sixty family moments, jumbled up. Drag them from the pile into the timeline — earliest at the top, most recent at the bottom. Drop a memory between two others and everything below it slides down.</p>
   </header>
 
   <div class="controls">
@@ -234,7 +187,7 @@ kbd{
   </div>
 
   <div class="board">
-    <section class="col">
+    <section class="col" id="pileCol">
       <div class="col-head">
         <h2>The pile</h2>
         <span class="meta" id="pileCount"></span>
@@ -242,16 +195,16 @@ kbd{
       <div class="pile" id="pile"></div>
     </section>
 
-    <section class="col">
+    <section class="col" id="timelineCol">
       <div class="col-head">
         <h2>The timeline</h2>
         <span class="meta">1 is earliest</span>
       </div>
-      <div class="slots" id="slots"></div>
+      <div class="timeline" id="timeline"></div>
     </section>
   </div>
 
-  <p class="hint">On a touchscreen you can also tap a memory, then tap the spot where it belongs. With a keyboard, <kbd>Tab</kbd> to a memory, <kbd>Enter</kbd> to pick it up, then <kbd>Enter</kbd> on a slot to drop it.</p>
+  <p class="hint">On a touchscreen you can also tap a memory, then tap the line where it belongs. With a keyboard, <kbd>Tab</kbd> to a memory, <kbd>Enter</kbd> to pick it up, then <kbd>Enter</kbd> on a line in the timeline to drop it in.</p>
 </div>
 
 <div class="bar">
@@ -283,7 +236,6 @@ var STORIES = [
   "GBuddy\u2019s Surprise Bday Bowling Party",
   "Ocean City Maryland Vaca",
   "Get Dad His Schwin Bike",
-  "Jonah Musical at BCA",
   "Mark Fails Safety Town",
   "Vaca to the Polynesian at Wisconsin Dells",
   "All Cousins Girl Outing to New York (Rochester)",
@@ -335,16 +287,18 @@ var SIZES = [6, 10, 15, STORIES.length];
 var state = {
   size: 10,
   mode: "spread",
+  total: 10,      // how many memories in this round
   answer: [],     // story indices, in true order
   pile: [],       // story indices still unplaced
-  slots: [],      // story index or null, per position
+  placed: [],     // story indices on the timeline, in the player's order
   results: null,  // array of booleans once checked
   revealed: false,
   selected: null
 };
 
 var pileEl = document.getElementById("pile");
-var slotsEl = document.getElementById("slots");
+var timelineEl = document.getElementById("timeline");
+var timelineCol = document.getElementById("timelineCol");
 var statusEl = document.getElementById("status");
 var checkBtn = document.getElementById("check");
 var revealBtn = document.getElementById("reveal");
@@ -404,9 +358,10 @@ function newRound(){
     for (var k = 0; k < STORIES.length; k++) all.push(k);
     picked = shuffled(all).slice(0, n).sort(function(a, b){ return a - b; });
   }
+  state.total = n;
   state.answer = picked;
   state.pile = shuffled(picked);
-  state.slots = new Array(n).fill(null);
+  state.placed = [];
   state.results = null;
   state.revealed = false;
   state.selected = null;
@@ -442,94 +397,109 @@ function makeCard(storyIndex, opts){
   return el;
 }
 
+function makeGap(index, selecting){
+  var g = document.createElement("div");
+  g.className = "gap";
+  g.dataset.gap = String(index);
+  if (selecting){
+    g.setAttribute("role", "button");
+    g.tabIndex = 0;
+    g.setAttribute("aria-label", "Insert at position " + (index + 1));
+  }
+  return g;
+}
+
 function render(){
   // pile
   pileEl.innerHTML = "";
   if (state.pile.length === 0){
     var empty = document.createElement("div");
     empty.className = "pile-empty";
-    empty.textContent = state.revealed ? "Round over." : "Pile empty — check your order below.";
+    empty.textContent = state.revealed ? "Round over." : "Pile empty \u2014 check your order below.";
     pileEl.appendChild(empty);
   } else {
-    state.pile.forEach(function(si){
-      pileEl.appendChild(makeCard(si));
-    });
+    state.pile.forEach(function(si){ pileEl.appendChild(makeCard(si)); });
   }
   pileCountEl.textContent = state.pile.length + " left";
 
-  // slots
-  slotsEl.innerHTML = "";
-  state.slots.forEach(function(si, i){
-    var slot = document.createElement("div");
-    slot.className = "slot";
-    slot.dataset.slot = String(i);
+  // timeline
+  var selecting = state.selected !== null && !state.revealed;
+  timelineEl.classList.toggle("selecting", selecting);
+  timelineEl.innerHTML = "";
+
+  timelineEl.appendChild(makeGap(0, selecting));
+  state.placed.forEach(function(si, i){
+    var row = document.createElement("div");
+    row.className = "row";
+    row.dataset.pos = String(i);
 
     var num = document.createElement("div");
     num.className = "num";
     num.textContent = String(i + 1);
-    slot.appendChild(num);
+    row.appendChild(num);
 
     var well = document.createElement("div");
-    well.className = "well";
-    if (si !== null){
-      well.classList.add("filled");
-      var opts = {};
-      if (state.results){
-        if (state.results[i]){ opts.cls = "right"; opts.mark = "\u2713"; }
-        else {
-          opts.cls = "wrong";
-          var trueIdx = state.answer.indexOf(si);
-          opts.mark = trueIdx < i ? "\u2191 earlier" : "\u2193 later";
-        }
+    well.className = "well filled";
+    var opts = {};
+    if (state.results){
+      if (state.results[i]){ opts.cls = "right"; opts.mark = "\u2713"; }
+      else {
+        opts.cls = "wrong";
+        var trueIdx = state.answer.indexOf(si);
+        opts.mark = trueIdx < i ? "\u2191 earlier" : "\u2193 later";
       }
-      well.appendChild(makeCard(si, opts));
-    } else {
-      well.setAttribute("role", "button");
-      well.tabIndex = 0;
-      well.setAttribute("aria-label", "Empty spot " + (i + 1));
     }
-    slot.appendChild(well);
-    slotsEl.appendChild(slot);
+    well.appendChild(makeCard(si, opts));
+    row.appendChild(well);
+    timelineEl.appendChild(row);
+    timelineEl.appendChild(makeGap(i + 1, selecting));
   });
 
-  var full = state.slots.every(function(s){ return s !== null; });
-  checkBtn.disabled = !full || state.revealed;
+  // remaining empty spots at the bottom
+  for (var j = state.placed.length; j < state.total; j++){
+    var er = document.createElement("div");
+    er.className = "row empty";
+    var en = document.createElement("div");
+    en.className = "num";
+    en.textContent = String(j + 1);
+    er.appendChild(en);
+    var ew = document.createElement("div");
+    ew.className = "well";
+    er.appendChild(ew);
+    timelineEl.appendChild(er);
+  }
+
+  checkBtn.disabled = state.placed.length !== state.total || state.revealed;
   revealBtn.disabled = state.revealed;
   returnBtn.hidden = !(state.results && !state.revealed && state.results.indexOf(false) !== -1);
 }
 
 function setStatus(html){ statusEl.innerHTML = html; }
 
-/* ---------- moving cards ---------- */
-
-function locationOf(storyIndex){
-  var p = state.pile.indexOf(storyIndex);
-  if (p !== -1) return { where: "pile", index: p };
-  var s = state.slots.indexOf(storyIndex);
-  if (s !== -1) return { where: "slot", index: s };
-  return null;
-}
+/* ---------- moving cards: insert and shift ---------- */
 
 function clearResults(){
-  if (state.results){ state.results = null; setStatus("Order changed — check again when you're ready."); }
+  if (state.results){ state.results = null; setStatus("Order changed \u2014 check again when you're ready."); }
 }
 
-function placeInSlot(storyIndex, slotIndex){
+/* Insert a memory at gap position `gapIndex` (0 = above everything).
+   Everything from that position down slides one spot later. */
+function insertAt(storyIndex, gapIndex){
   if (state.revealed) return;
-  var from = locationOf(storyIndex);
-  if (!from) return;
-  if (from.where === "slot" && from.index === slotIndex) return;
+  var from = state.placed.indexOf(storyIndex);
+  var target = gapIndex;
 
-  var occupant = state.slots[slotIndex];
-  if (from.where === "slot") state.slots[from.index] = null;
-  else state.pile.splice(from.index, 1);
-
-  state.slots[slotIndex] = storyIndex;
-
-  if (occupant !== null && occupant !== undefined){
-    if (from.where === "slot") state.slots[from.index] = occupant;  // swap
-    else state.pile.push(occupant);                                 // bumped back to pile
+  if (from !== -1){
+    if (target === from || target === from + 1){ state.selected = null; render(); return; }
+    state.placed.splice(from, 1);
+    if (target > from) target--;
+  } else {
+    var p = state.pile.indexOf(storyIndex);
+    if (p === -1) return;
+    state.pile.splice(p, 1);
   }
+  if (target > state.placed.length) target = state.placed.length;
+  state.placed.splice(target, 0, storyIndex);
   clearResults();
   state.selected = null;
   render();
@@ -537,9 +507,9 @@ function placeInSlot(storyIndex, slotIndex){
 
 function returnToPile(storyIndex){
   if (state.revealed) return;
-  var from = locationOf(storyIndex);
-  if (!from || from.where === "pile") return;
-  state.slots[from.index] = null;
+  var from = state.placed.indexOf(storyIndex);
+  if (from === -1) return;
+  state.placed.splice(from, 1);   // everything below slides back up
   state.pile.push(storyIndex);
   clearResults();
   state.selected = null;
@@ -554,17 +524,15 @@ document.addEventListener("pointerdown", function(e){
   if (e.button !== undefined && e.button > 0) return;
   var card = e.target.closest(".card");
   if (!card || state.revealed) return;
+  var r = card.getBoundingClientRect();
   drag = {
     id: parseInt(card.dataset.story, 10),
     startX: e.clientX, startY: e.clientY,
     x: e.clientX, y: e.clientY,
     el: card, ghost: null, moved: false,
-    offX: 0, offY: 0, w: card.getBoundingClientRect().width,
+    offX: e.clientX - r.left, offY: e.clientY - r.top, w: r.width,
     pointerId: e.pointerId
   };
-  var r = card.getBoundingClientRect();
-  drag.offX = e.clientX - r.left;
-  drag.offY = e.clientY - r.top;
 });
 
 document.addEventListener("pointermove", function(e){
@@ -577,7 +545,7 @@ document.addEventListener("pointermove", function(e){
   }
   e.preventDefault();
   moveGhost();
-  highlightTarget(targetAt(e.clientX, e.clientY));
+  highlight(targetAt(e.clientX, e.clientY));
   autoScroll(e.clientY);
 }, { passive: false });
 
@@ -600,24 +568,34 @@ function moveGhost(){
     "translate(" + (drag.x - drag.offX) + "px," + (drag.y - drag.offY) + "px) rotate(-1.2deg)";
 }
 
-function targetAt(x, y){
-  var stack = document.elementsFromPoint(x, y);
-  for (var i = 0; i < stack.length; i++){
-    var el = stack[i];
-    if (el.id === "ghost") continue;
-    var slot = el.closest ? el.closest(".slot") : null;
-    if (slot) return { kind: "slot", el: slot, index: parseInt(slot.dataset.slot, 10) };
-    var pile = el.closest ? el.closest("#pile") : null;
-    if (pile) return { kind: "pile", el: pile };
+function inside(el, x, y){
+  var r = el.getBoundingClientRect();
+  return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+}
+
+/* Which insertion line is the pointer nearest? */
+function gapIndexAt(y){
+  var rows = timelineEl.querySelectorAll(".row:not(.empty)");
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i].getBoundingClientRect();
+    if (y < r.top + r.height / 2) return i;
   }
+  return rows.length;
+}
+
+function targetAt(x, y){
+  if (inside(timelineCol, x, y)) return { kind: "timeline", gap: gapIndexAt(y) };
+  if (inside(document.getElementById("pileCol"), x, y)) return { kind: "pile" };
   return null;
 }
 
-function highlightTarget(t){
-  Array.prototype.forEach.call(document.querySelectorAll(".drop-hot"), function(el){
-    el.classList.remove("drop-hot");
-  });
-  if (t) t.el.classList.add("drop-hot");
+function highlight(t){
+  Array.prototype.forEach.call(timelineEl.querySelectorAll(".gap.hot"), function(g){ g.classList.remove("hot"); });
+  pileEl.classList.remove("drop-hot");
+  if (!t) return;
+  if (t.kind === "pile"){ pileEl.classList.add("drop-hot"); return; }
+  var g = timelineEl.querySelector('.gap[data-gap="' + t.gap + '"]');
+  if (g) g.classList.add("hot");
 }
 
 var scrollTimer = null;
@@ -642,12 +620,12 @@ function endDrag(e){
   drag = null;
   if (d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
   d.el.classList.remove("dragging");
-  highlightTarget(null);
 
   if (!d.moved){ toggleSelect(d.id); return; }   // a tap, not a drag
   var t = targetAt(e.clientX, e.clientY);
+  highlight(null);
   if (!t){ render(); return; }
-  if (t.kind === "slot") placeInSlot(d.id, t.index);
+  if (t.kind === "timeline") insertAt(d.id, t.gap);
   else returnToPile(d.id);
 }
 
@@ -655,51 +633,35 @@ function endDrag(e){
 
 function toggleSelect(storyIndex){
   if (state.revealed) return;
-  if (state.selected === storyIndex) state.selected = null;
-  else if (state.selected !== null && state.selected !== storyIndex){
-    // tapping another card while one is held: drop the held one onto that card's spot
-    var target = locationOf(storyIndex);
-    var held = state.selected;
-    state.selected = null;
-    if (target && target.where === "slot"){ placeInSlot(held, target.index); return; }
-    state.selected = storyIndex;
-  } else {
-    state.selected = storyIndex;
-  }
+  state.selected = (state.selected === storyIndex) ? null : storyIndex;
   render();
 }
 
 document.addEventListener("click", function(e){
-  var well = e.target.closest(".well");
-  if (well && !e.target.closest(".card") && state.selected !== null){
-    var slot = well.closest(".slot");
-    if (slot) placeInSlot(state.selected, parseInt(slot.dataset.slot, 10));
-    return;
-  }
-  if (e.target.closest("#pile") && !e.target.closest(".card") && state.selected !== null){
-    returnToPile(state.selected);
-  }
+  if (state.selected === null) return;
+  var gap = e.target.closest(".gap");
+  if (gap){ insertAt(state.selected, parseInt(gap.dataset.gap, 10)); return; }
+  if (e.target.closest(".row.empty")){ insertAt(state.selected, state.placed.length); return; }
+  if (e.target.closest("#pile") && !e.target.closest(".card")) returnToPile(state.selected);
 });
 
 document.addEventListener("keydown", function(e){
   if (e.key !== "Enter" && e.key !== " ") return;
   var card = e.target.closest ? e.target.closest(".card") : null;
   if (card){ e.preventDefault(); toggleSelect(parseInt(card.dataset.story, 10)); return; }
-  var well = e.target.closest ? e.target.closest(".well") : null;
-  if (well && state.selected !== null){
+  var gap = e.target.closest ? e.target.closest(".gap") : null;
+  if (gap && state.selected !== null){
     e.preventDefault();
-    var slot = well.closest(".slot");
-    if (slot) placeInSlot(state.selected, parseInt(slot.dataset.slot, 10));
+    insertAt(state.selected, parseInt(gap.dataset.gap, 10));
   }
 });
 
 /* ---------- checking ---------- */
 
 checkBtn.addEventListener("click", function(){
-  var n = state.slots.length;
-  var res = [], right = 0;
+  var n = state.total, res = [], right = 0;
   for (var i = 0; i < n; i++){
-    var ok = state.slots[i] === state.answer[i];
+    var ok = state.placed[i] === state.answer[i];
     res.push(ok);
     if (ok) right++;
   }
@@ -723,20 +685,21 @@ checkBtn.addEventListener("click", function(){
 });
 
 returnBtn.addEventListener("click", function(){
-  for (var i = 0; i < state.slots.length; i++){
-    if (state.results && !state.results[i] && state.slots[i] !== null){
-      state.pile.push(state.slots[i]);
-      state.slots[i] = null;
-    }
+  var keep = [], back = [];
+  for (var i = 0; i < state.placed.length; i++){
+    if (state.results && state.results[i]) keep.push(state.placed[i]);
+    else back.push(state.placed[i]);
   }
-  state.pile = shuffled(state.pile);
+  state.placed = keep;
+  state.pile = shuffled(state.pile.concat(back));
   state.results = null;
+  state.selected = null;
   render();
-  setStatus("The correct ones stayed put. Try the rest again.");
+  setStatus("The ones you had right are still in order. Slide the rest in around them.");
 });
 
 revealBtn.addEventListener("click", function(){
-  state.slots = state.answer.slice();
+  state.placed = state.answer.slice();
   state.pile = [];
   state.results = state.answer.map(function(){ return true; });
   state.revealed = true;
@@ -752,7 +715,7 @@ function saveBest(n, right){
     var key = "obrien-timeline-best-" + n;
     var prev = window.localStorage.getItem(key);
     if (prev === null || right > parseInt(prev, 10)) window.localStorage.setItem(key, String(right));
-  } catch (err){ /* storage unavailable — scores just aren't kept */ }
+  } catch (err){ /* storage unavailable \u2014 scores just aren't kept */ }
 }
 function loadBest(n){
   try {
